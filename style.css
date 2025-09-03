@@ -399,13 +399,13 @@ body {
 }
 
 .footer a {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer a:hover {
-    color: var(--bilibili-pink);
+    color: var(--bilibili-pink) !important;
     text-decoration: underline;
 }
 
@@ -422,13 +422,13 @@ body {
 }
 
 .author-info a {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .author-info a:hover {
-    color: var(--bilibili-pink);
+    color: var(--bilibili-pink) !important;
     text-decoration: underline;
 }
 
