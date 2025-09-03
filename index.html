@@ -13,39 +13,43 @@
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="logo">
-                <i class="fab fa-bilibili"></i>
-                <h1>VRC Bilibili 解析工具</h1>
-            </div>
-            <p class="subtitle">快速獲取 Bilibili 影片和直播的直鏈地址</p>
-            <p class="domain">vrcbilibili.xn--o8z.tw</p>
-        </header>
+                       <header class="header">
+                   <div class="language-switcher">
+                       <button class="lang-btn active" data-lang="zh">中文</button>
+                       <button class="lang-btn" data-lang="ja">日本語</button>
+                   </div>
+                   <div class="logo">
+                       <i class="fab fa-bilibili"></i>
+                       <h1 data-zh="VRC Bilibili 解析工具" data-ja="VRC Bilibili 解析ツール">VRC Bilibili 解析工具</h1>
+                   </div>
+                   <p class="subtitle" data-zh="快速獲取 Bilibili 影片和直播的直鏈地址" data-ja="Bilibili 動画とライブストリーミングの直接リンクを素早く取得">快速獲取 Bilibili 影片和直播的直鏈地址</p>
+                   <p class="domain">vrcbilibili.xn--o8z.tw</p>
+               </header>
 
         <main class="main-content">
             <div class="input-section">
                 <div class="input-group">
-                    <input type="text" id="urlInput" placeholder="請輸入 Bilibili 影片或直播連結..." class="url-input">
+                    <input type="text" id="urlInput" placeholder="請輸入 Bilibili 影片或直播連結..." class="url-input" data-zh-placeholder="請輸入 Bilibili 影片或直播連結..." data-ja-placeholder="Bilibili 動画またはライブストリーミングのリンクを入力してください...">
                     <button id="parseBtn" class="parse-btn">
                         <i class="fas fa-play"></i>
-                        解析
+                        <span data-zh="解析" data-ja="解析">解析</span>
                     </button>
                 </div>
                 <div class="example-links">
-                    <p>範例連結：</p>
+                    <p data-zh="範例連結：" data-ja="例のリンク：">範例連結：</p>
                     <div class="example-buttons">
-                        <button class="example-btn" data-url="https://www.bilibili.com/video/BV1xx411c7mu">影片範例</button>
-                        <button class="example-btn" data-url="https://live.bilibili.com/1">直播範例</button>
+                        <button class="example-btn" data-url="https://www.bilibili.com/video/BV1xx411c7mu" data-zh="影片範例" data-ja="動画例">影片範例</button>
+                        <button class="example-btn" data-url="https://live.bilibili.com/1" data-zh="直播範例" data-ja="ライブ例">直播範例</button>
                     </div>
                 </div>
             </div>
 
             <div class="result-section" id="resultSection" style="display: none;">
                 <div class="result-header">
-                    <h3><i class="fas fa-link"></i> 解析結果</h3>
+                    <h3><i class="fas fa-link"></i> <span data-zh="解析結果" data-ja="解析結果">解析結果</span></h3>
                     <button id="copyAllBtn" class="copy-all-btn">
                         <i class="fas fa-copy"></i>
-                        複製全部
+                        <span data-zh="複製全部" data-ja="すべてコピー">複製全部</span>
                     </button>
                 </div>
                 <div class="result-content" id="resultContent">
@@ -81,8 +85,9 @@
         </main>
 
         <footer class="footer">
-            <p>&copy; 2024 Bilibili 解析工具. 僅供學習交流使用</p>
-            <p class="disclaimer">請尊重創作者版權，不要濫用解析功能</p>
+            <p>&copy; 2025 <span data-zh="VRC Bilibili 解析工具" data-ja="VRC Bilibili 解析ツール">VRC Bilibili 解析工具</span>. <span data-zh="僅供學習交流使用" data-ja="学習・交流目的のみ">僅供學習交流使用</span></p>
+            <p class="disclaimer"><span data-zh="請尊重創作者版權，不要濫用解析功能" data-ja="創作者の著作権を尊重し、解析機能を乱用しないでください">請尊重創作者版權，不要濫用解析功能</span></p>
+            <p><span data-zh="技術支援：" data-ja="技術サポート：">技術支援：</span> <a href="mailto:wangure0329@糕.tw">wangure0329@糕.tw</a></p>
         </footer>
     </div>
 

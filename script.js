@@ -1,4 +1,76 @@
 // Bilibili 解析工具 JavaScript
+
+// 語言切換功能
+const translations = {
+    zh: {
+        'loading': '解析中...',
+        'error': '解析失敗',
+        'success': '解析成功',
+        'copy': '複製',
+        'copied': '已複製',
+        'copyAll': '複製全部',
+        'quality': '清晰度',
+        'format': '格式',
+        'size': '大小',
+        'duration': '時長',
+        'video': '影片',
+        'live': '直播',
+        'noResults': '沒有找到解析結果',
+        'invalidUrl': '請輸入有效的 Bilibili 連結',
+        'networkError': '網路錯誤，請稍後重試'
+    },
+    ja: {
+        'loading': '解析中...',
+        'error': '解析失敗',
+        'success': '解析成功',
+        'copy': 'コピー',
+        'copied': 'コピーしました',
+        'copyAll': 'すべてコピー',
+        'quality': '画質',
+        'format': 'フォーマット',
+        'size': 'サイズ',
+        'duration': '時間',
+        'video': '動画',
+        'live': 'ライブ',
+        'noResults': '解析結果が見つかりません',
+        'invalidUrl': '有効なBilibiliリンクを入力してください',
+        'networkError': 'ネットワークエラーです。しばらくしてから再試行してください'
+    }
+};
+
+let currentLang = 'zh';
+
+// 語言切換功能
+function switchLanguage(lang) {
+    currentLang = lang;
+    
+    // 更新語言按鈕狀態
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+    
+    // 更新所有帶有 data-zh 和 data-ja 屬性的元素
+    document.querySelectorAll('[data-zh]').forEach(element => {
+        const text = element.getAttribute(`data-${lang}`);
+        if (text) {
+            element.textContent = text;
+        }
+    });
+    
+    // 更新輸入框的 placeholder
+    const urlInput = document.getElementById('urlInput');
+    if (urlInput) {
+        const placeholder = urlInput.getAttribute(`data-${lang}-placeholder`);
+        if (placeholder) {
+            urlInput.placeholder = placeholder;
+        }
+    }
+    
+    // 保存語言偏好
+    localStorage.setItem('preferredLanguage', lang);
+}
+
 class BilibiliParser {
     constructor() {
         this.init();
@@ -13,6 +85,18 @@ class BilibiliParser {
         
         // 創建提示框元素
         this.createToast();
+        
+        // 初始化語言
+        const savedLang = localStorage.getItem('preferredLanguage') || 'zh';
+        switchLanguage(savedLang);
+        
+        // 語言切換事件
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
         
         // 檢查 URL 參數
         this.handleUrlParams();
@@ -78,7 +162,7 @@ class BilibiliParser {
         }
 
         if (!this.isValidBilibiliUrl(url)) {
-            this.showToast('請輸入有效的 Bilibili 連結', 'error');
+            this.showToast(translations[currentLang]['invalidUrl'], 'error');
             return;
         }
 
@@ -87,10 +171,10 @@ class BilibiliParser {
         try {
             const results = await this.parseUrl(url);
             this.displayResults(results);
-            this.showToast('解析成功！', 'success');
+            this.showToast(translations[currentLang]['success'], 'success');
         } catch (error) {
             console.error('解析錯誤:', error);
-            this.showToast('解析失敗，請稍後再試', 'error');
+            this.showToast(translations[currentLang]['networkError'], 'error');
         } finally {
             this.showLoading(false);
         }
@@ -346,7 +430,7 @@ class BilibiliParser {
                 <small style="color: var(--text-secondary);">${result.description}</small>
                 <button class="copy-btn" onclick="bilibiliParser.copyToClipboard('${result.url}')">
                     <i class="fas fa-copy"></i>
-                    複製
+                    ${translations[currentLang]['copy']}
                 </button>
             </div>
         `;
@@ -368,7 +452,7 @@ class BilibiliParser {
     async copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            this.showToast('已複製到剪貼簿', 'success');
+            this.showToast(translations[currentLang]['copied'], 'success');
         } catch (error) {
             // 降級方案
             this.fallbackCopyToClipboard(text);
@@ -387,9 +471,9 @@ class BilibiliParser {
         
         try {
             document.execCommand('copy');
-            this.showToast('已複製到剪貼簿', 'success');
+            this.showToast(translations[currentLang]['copied'], 'success');
         } catch (error) {
-            this.showToast('複製失敗', 'error');
+            this.showToast(translations[currentLang]['error'], 'error');
         }
         
         document.body.removeChild(textArea);
@@ -397,7 +481,7 @@ class BilibiliParser {
 
     copyAllResults() {
         if (this.currentResults.length === 0) {
-            this.showToast('沒有可複製的結果', 'warning');
+            this.showToast(translations[currentLang]['noResults'], 'warning');
             return;
         }
 
@@ -412,12 +496,12 @@ class BilibiliParser {
         if (show) {
             loadingOverlay.style.display = 'flex';
             parseBtn.disabled = true;
-            parseBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 解析中...';
+            parseBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${translations[currentLang]['loading']}`;
             this.isLoading = true;
         } else {
             loadingOverlay.style.display = 'none';
             parseBtn.disabled = false;
-            parseBtn.innerHTML = '<i class="fas fa-play"></i> 解析';
+            parseBtn.innerHTML = `<i class="fas fa-play"></i> <span data-zh="解析" data-ja="解析">解析</span>`;
             this.isLoading = false;
         }
     }

@@ -188,6 +188,14 @@ docker-compose up -d --build
 
 歡迎提交 Issue 和 Pull Request 來改進這個項目。
 
+## 📞 技術支援
+
+如果遇到問題或需要協助，請聯繫：
+
+**Email**: wangure0329@糕.tw
+
+我們會盡快回覆您的問題。
+
 ## 授權
 
 MIT License

@@ -68,3 +68,5 @@ docker-compose up -d --build
 ## ❓ 需要幫助？
 
 查看 [DEPLOYMENT.md](DEPLOYMENT.md) 獲取詳細部署指南。
+
+**技術支援**: wangure0329@糕.tw
