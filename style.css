@@ -398,6 +398,17 @@ body {
     margin-bottom: 5px;
 }
 
+.footer a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--bilibili-pink);
+    text-decoration: underline;
+}
+
 .disclaimer {
     font-size: 0.9rem;
     opacity: 0.8;
@@ -407,11 +418,11 @@ body {
     font-size: 0.9rem;
     opacity: 0.9;
     margin-top: 10px;
-    color: var(--bilibili-blue);
+    color: var(--text-primary);
 }
 
 .author-info a {
-    color: var(--bilibili-blue);
+    color: var(--text-primary);
     text-decoration: none;
     transition: color 0.3s ease;
 }
