@@ -207,4 +207,3 @@ MIT License
 ## 致謝
 
 - 感謝 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 提供的 Bilibili API 參考
-- 感謝 [mmyo456/BiliBili-JX](https://github.com/mmyo456/BiliBili-JX) 提供的代碼參考
