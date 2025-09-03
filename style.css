@@ -409,6 +409,15 @@ body {
     text-decoration: underline;
 }
 
+/* 確保技術支援超連結的樣式 */
+.footer p a[href^="mailto:"] {
+    color: var(--text-primary) !important;
+}
+
+.footer p a[href^="mailto:"]:hover {
+    color: var(--bilibili-pink) !important;
+}
+
 .disclaimer {
     font-size: 0.9rem;
     opacity: 0.8;
