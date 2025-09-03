@@ -17,7 +17,23 @@ const translations = {
         'live': '直播',
         'noResults': '沒有找到解析結果',
         'invalidUrl': '請輸入有效的 Bilibili 連結',
-        'networkError': '網路錯誤，請稍後重試'
+        'networkError': '網路錯誤，請稍後重試',
+        'features': '功能特點',
+        'fastParse': '快速解析',
+        'multiQuality': '多清晰度',
+        'directLink': '直鏈獲取',
+        'noLogin': '無需登入',
+        'supportVideo': '支援影片',
+        'supportLive': '支援直播',
+        'modernUI': '現代化界面',
+        'responsive': '響應式設計',
+        'example': '範例',
+        'exampleVideo': '影片範例',
+        'exampleLive': '直播範例',
+        'parseResult': '解析結果',
+        'techSupport': '技術支援',
+        'author': 'by りん',
+        'socialMedia': 'X: @wangure0329'
     },
     ja: {
         'loading': '解析中...',
@@ -34,7 +50,23 @@ const translations = {
         'live': 'ライブ',
         'noResults': '解析結果が見つかりません',
         'invalidUrl': '有効なBilibiliリンクを入力してください',
-        'networkError': 'ネットワークエラーです。しばらくしてから再試行してください'
+        'networkError': 'ネットワークエラーです。しばらくしてから再試行してください',
+        'features': '機能特徴',
+        'fastParse': '高速解析',
+        'multiQuality': '複数画質',
+        'directLink': '直接リンク取得',
+        'noLogin': 'ログイン不要',
+        'supportVideo': '動画対応',
+        'supportLive': 'ライブ対応',
+        'modernUI': 'モダンUI',
+        'responsive': 'レスポンシブデザイン',
+        'example': '例',
+        'exampleVideo': '動画例',
+        'exampleLive': 'ライブ例',
+        'parseResult': '解析結果',
+        'techSupport': '技術サポート',
+        'author': 'by りん',
+        'socialMedia': 'X: @wangure0329'
     }
 };
 

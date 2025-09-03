@@ -196,6 +196,10 @@ docker-compose up -d --build
 
 我們會盡快回覆您的問題。
 
+---
+
+**by りん** | **X: [@wangure0329](https://x.com/wangure0329)**
+
 ## 授權
 
 MIT License

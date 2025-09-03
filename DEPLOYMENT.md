@@ -225,6 +225,10 @@ docker volume prune
 2. 查看 GitHub Issues
 3. 聯繫技術支援：wangure0329@糕.tw
 
+---
+
+**by りん** | **X: [@wangure0329](https://x.com/wangure0329)**
+
 ## 🔒 安全建議
 
 1. **定期更新系統和 Docker**
