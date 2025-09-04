@@ -1,37 +1,65 @@
 // Bilibili 解析工具 JavaScript
 
-// 計數器相關功能
+// 計數器相關功能 - 重新設計
 let serviceCounters = {
     total: 0,
     today: 0,
     thisMonth: 0
 };
 
-
 // 加載計數器數據
 async function loadCounters() {
     try {
+        console.log('🔄 正在加載計數器數據...');
         const response = await fetch('/api/counters');
         const data = await response.json();
-        if (data.success) {
-            serviceCounters = data.data;
+        
+        if (data.success && data.data) {
+            serviceCounters = {
+                total: data.data.total || 0,
+                today: data.data.today || 0,
+                thisMonth: data.data.thisMonth || 0
+            };
+            console.log('✅ 計數器數據加載成功:', serviceCounters);
             updateCounterDisplay();
+        } else {
+            console.warn('⚠️ 計數器數據格式錯誤:', data);
+            updateCounterDisplay(); // 使用默認值
         }
     } catch (error) {
-        console.error('加載計數器失敗:', error);
+        console.error('❌ 加載計數器失敗:', error);
+        updateCounterDisplay(); // 使用默認值
     }
 }
 
-
 // 更新計數器顯示
 function updateCounterDisplay() {
+    console.log('🔄 更新計數器顯示:', serviceCounters);
+    
     const todayCount = document.getElementById('todayCount');
     const monthCount = document.getElementById('monthCount');
     const totalCount = document.getElementById('totalCount');
     
-    if (todayCount) todayCount.textContent = serviceCounters.today.toLocaleString();
-    if (monthCount) monthCount.textContent = serviceCounters.thisMonth.toLocaleString();
-    if (totalCount) totalCount.textContent = serviceCounters.total.toLocaleString();
+    if (todayCount) {
+        todayCount.textContent = serviceCounters.today.toLocaleString();
+        console.log('✅ 今日服務更新為:', serviceCounters.today);
+    } else {
+        console.error('❌ 找不到 todayCount 元素');
+    }
+    
+    if (monthCount) {
+        monthCount.textContent = serviceCounters.thisMonth.toLocaleString();
+        console.log('✅ 本月服務更新為:', serviceCounters.thisMonth);
+    } else {
+        console.error('❌ 找不到 monthCount 元素');
+    }
+    
+    if (totalCount) {
+        totalCount.textContent = serviceCounters.total.toLocaleString();
+        console.log('✅ 累計服務更新為:', serviceCounters.total);
+    } else {
+        console.error('❌ 找不到 totalCount 元素');
+    }
 }
 
 

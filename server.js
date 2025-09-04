@@ -407,18 +407,6 @@ app.get('/', (req, res) => {
             }
         }
 
-        // 檢查是否是 Bilibili 直播連結
-        if (url.includes('live.bilibili.com')) {
-            const match = url.match(/live\.bilibili\.com\/(\d+)/);
-            if (match) {
-                const roomId = match[1];
-                // 更新服務計數器
-                const counters = updateCounters();
-                console.log(`📺 直播重定向 | 房間ID: ${roomId} | 服務次數: 今日${counters.today}次/本月${counters.thisMonth}次/累計${counters.total}次 | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
-                // 直播暫時重定向到代理頁面
-                return res.redirect(`/proxy?url=${encodeURIComponent(url)}`);
-            }
-        }
 
         // 如果不是有效的 Bilibili 連結，顯示錯誤頁面
         return res.send(`
@@ -436,7 +424,7 @@ app.get('/', (req, res) => {
             <body>
                 <div class="error">
                     <h1>❌ 解析失敗</h1>
-                    <p>請提供有效的 Bilibili 影片或直播連結</p>
+                    <p>請提供有效的 Bilibili 影片連結</p>
                     <p>格式：<code>http://192.168.0.10:3000/?url=https://www.bilibili.com/video/BV1xx411c7mu</code></p>
                     <a href="/" style="color: #00aef0;">返回首頁</a>
                 </div>
