@@ -98,8 +98,8 @@ function getCounters() {
 function getRandomMainNode() {
     const mainNodes = [
         'upos-sz-estgoss.bilivideo.com',
-        'upos-sz-estghw.bilivideo.com',
-        'upos-sz-estgcos.bilivideo.com'
+        'upos-sz-estgcos.bilivideo.com',
+        'upos-bj-estgoss.bilivideo.com'
     ];
     return mainNodes[Math.floor(Math.random() * mainNodes.length)];
 }
@@ -159,6 +159,7 @@ async function parseVideoWithRetry(bvid, maxRetries = 3) {
                             const selectedMainNode = getRandomMainNode();
                             let mainNodeUrl = dash1440P.baseUrl;
                             mainNodeUrl = mainNodeUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            mainNodeUrl = mainNodeUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
                             mainNodeUrl = mainNodeUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
                             mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
@@ -176,6 +177,7 @@ async function parseVideoWithRetry(bvid, maxRetries = 3) {
                         const selectedMainNode = getRandomMainNode();
                         let mainNodeUrl = streamData.durl[0].url;
                         mainNodeUrl = mainNodeUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
+                        mainNodeUrl = mainNodeUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
                         mainNodeUrl = mainNodeUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                         mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
                         mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
@@ -483,8 +485,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                         // FLV 格式 - 隨機選擇主節點
                         const cdnNodes = [
                             'upos-sz-estgoss.bilivideo.com',
-                            'upos-sz-estghw.bilivideo.com',
-                            'upos-sz-estgcos.bilivideo.com'
+                            'upos-sz-estgcos.bilivideo.com',
+                            'upos-bj-estgoss.bilivideo.com'
                         ];
                         
                         streamData.durl.forEach((item, index) => {
@@ -493,6 +495,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 隨機選擇主節點並替換所有CDN節點
                             const selectedMainNode = getRandomMainNode();
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
@@ -520,8 +523,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                         // DASH 格式 - 隨機選擇主節點
                         const cdnNodes = [
                             'upos-sz-estgoss.bilivideo.com',
-                            'upos-sz-estghw.bilivideo.com',
-                            'upos-sz-estgcos.bilivideo.com'
+                            'upos-sz-estgcos.bilivideo.com',
+                            'upos-bj-estgoss.bilivideo.com'
                         ];
                         
                         streamData.dash.video.forEach((item, index) => {
@@ -530,6 +533,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 隨機選擇主節點並替換所有CDN節點
                             const selectedMainNode = getRandomMainNode();
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
@@ -558,8 +562,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                         // DASH 音頻 - 隨機選擇主節點
                         const cdnNodes = [
                             'upos-sz-estgoss.bilivideo.com',
-                            'upos-sz-estghw.bilivideo.com',
-                            'upos-sz-estgcos.bilivideo.com'
+                            'upos-sz-estgcos.bilivideo.com',
+                            'upos-bj-estgoss.bilivideo.com'
                         ];
                         
                         streamData.dash.audio.forEach((item, index) => {
@@ -568,6 +572,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 隨機選擇主節點並替換所有CDN節點
                             const selectedMainNode = getRandomMainNode();
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
