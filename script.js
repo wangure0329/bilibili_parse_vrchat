@@ -1,5 +1,37 @@
 // Bilibili 解析工具 JavaScript
 
+// 計數器相關功能
+let serviceCounters = {
+    total: 0,
+    today: 0,
+    thisMonth: 0
+};
+
+// 加載計數器數據
+async function loadCounters() {
+    try {
+        const response = await fetch('/api/counters');
+        const data = await response.json();
+        if (data.success) {
+            serviceCounters = data.data;
+            updateCounterDisplay();
+        }
+    } catch (error) {
+        console.error('加載計數器失敗:', error);
+    }
+}
+
+// 更新計數器顯示
+function updateCounterDisplay() {
+    const todayCount = document.getElementById('todayCount');
+    const monthCount = document.getElementById('monthCount');
+    const totalCount = document.getElementById('totalCount');
+    
+    if (todayCount) todayCount.textContent = serviceCounters.today.toLocaleString();
+    if (monthCount) monthCount.textContent = serviceCounters.thisMonth.toLocaleString();
+    if (totalCount) totalCount.textContent = serviceCounters.total.toLocaleString();
+}
+
 // 語言切換功能
 const translations = {
     zh: {
@@ -611,6 +643,9 @@ function debounce(func, delay) {
 document.addEventListener('DOMContentLoaded', () => {
     // 創建全局實例
     window.bilibiliParser = new BilibiliParser();
+    
+    // 加載計數器數據
+    loadCounters();
     
     // 添加一些額外的功能
     addKeyboardShortcuts();

@@ -7,6 +7,15 @@ const geoip = require('geoip-lite');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 服務計數器
+let serviceCounters = {
+    total: 0,           // 累計總服務次數
+    today: 0,           // 今日服務次數
+    thisMonth: 0,       // 本月服務次數
+    lastResetDate: new Date().toDateString(), // 上次重置日期
+    lastResetMonth: new Date().getMonth()     // 上次重置月份
+};
+
 // 中間件
 app.use(cors({
     origin: true,
@@ -29,6 +38,60 @@ function getLocationInfo(ip) {
         return `${geo.country} ${geo.city || geo.region || ''}`.trim();
     }
     return '未知位置';
+}
+
+// 計數器管理函數
+function updateCounters() {
+    const now = new Date();
+    const today = now.toDateString();
+    const thisMonth = now.getMonth();
+    
+    // 檢查是否需要重置今日計數
+    if (serviceCounters.lastResetDate !== today) {
+        serviceCounters.today = 0;
+        serviceCounters.lastResetDate = today;
+    }
+    
+    // 檢查是否需要重置本月計數
+    if (serviceCounters.lastResetMonth !== thisMonth) {
+        serviceCounters.thisMonth = 0;
+        serviceCounters.lastResetMonth = thisMonth;
+    }
+    
+    // 增加計數
+    serviceCounters.total++;
+    serviceCounters.today++;
+    serviceCounters.thisMonth++;
+    
+    return {
+        total: serviceCounters.total,
+        today: serviceCounters.today,
+        thisMonth: serviceCounters.thisMonth
+    };
+}
+
+// 獲取計數器資訊的函數
+function getCounters() {
+    const now = new Date();
+    const today = now.toDateString();
+    const thisMonth = now.getMonth();
+    
+    // 確保計數器是最新的
+    if (serviceCounters.lastResetDate !== today) {
+        serviceCounters.today = 0;
+        serviceCounters.lastResetDate = today;
+    }
+    
+    if (serviceCounters.lastResetMonth !== thisMonth) {
+        serviceCounters.thisMonth = 0;
+        serviceCounters.lastResetMonth = thisMonth;
+    }
+    
+    return {
+        total: serviceCounters.total,
+        today: serviceCounters.today,
+        thisMonth: serviceCounters.thisMonth
+    };
 }
 
 // 隨機選擇主節點的函數
@@ -175,7 +238,9 @@ async function parseAndRedirectTo1440P(req, res, bvid) {
             const result = await parseWithTimeout(bvid, 10000); // 10秒超時
             const endTime = Date.now();
             const parseTime = endTime - startTime;
-            console.log(`✅ 解析成功 | 格式: ${result.format} | 品質: 1440P | 節點: ${result.node} | 解析時間: ${parseTime}ms | 完成時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
+            // 更新服務計數器
+            const counters = updateCounters();
+            console.log(`✅ 解析成功 | 格式: ${result.format} | 品質: 1440P | 節點: ${result.node} | 解析時間: ${parseTime}ms | 服務次數: 今日${counters.today}次/本月${counters.thisMonth}次/累計${counters.total}次 | 完成時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
             return res.redirect(result.url);
         } catch (error) {
             const endTime = Date.now();
@@ -253,6 +318,9 @@ app.get('/', (req, res) => {
             const match = url.match(/live\.bilibili\.com\/(\d+)/);
             if (match) {
                 const roomId = match[1];
+                // 更新服務計數器
+                const counters = updateCounters();
+                console.log(`📺 直播重定向 | 房間ID: ${roomId} | 服務次數: 今日${counters.today}次/本月${counters.thisMonth}次/累計${counters.total}次 | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
                 // 直播暫時重定向到代理頁面
                 return res.redirect(`/proxy?url=${encodeURIComponent(url)}`);
             }
@@ -658,6 +726,22 @@ app.get('/api/parse/live/:roomId', async (req, res) => {
     }
 });
 
+
+// 獲取服務計數器資訊的 API
+app.get('/api/counters', (req, res) => {
+    try {
+        const counters = getCounters();
+        res.json({
+            success: true,
+            data: counters
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: '獲取計數器資訊失敗'
+        });
+    }
+});
 
 // 提供靜態文件（放在主頁面路由之後）
 app.use(express.static('.'));
