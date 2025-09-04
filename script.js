@@ -1,65 +1,35 @@
 // Bilibili 解析工具 JavaScript
 
-// 計數器相關功能 - 重新設計
-let serviceCounters = {
-    total: 0,
-    today: 0,
-    thisMonth: 0
-};
+// 簡化計數器系統
+let stats = { total: 0, today: 0, thisMonth: 0 };
 
-// 加載計數器數據
-async function loadCounters() {
+// 加載統計數據
+async function loadStats() {
     try {
-        console.log('🔄 正在加載計數器數據...');
         const response = await fetch('/api/counters');
-        const data = await response.json();
+        const result = await response.json();
         
-        if (data.success && data.data) {
-            serviceCounters = {
-                total: data.data.total || 0,
-                today: data.data.today || 0,
-                thisMonth: data.data.thisMonth || 0
-            };
-            console.log('✅ 計數器數據加載成功:', serviceCounters);
-            updateCounterDisplay();
-        } else {
-            console.warn('⚠️ 計數器數據格式錯誤:', data);
-            updateCounterDisplay(); // 使用默認值
+        if (result.success) {
+            stats = result.data;
+            updateStats();
         }
     } catch (error) {
-        console.error('❌ 加載計數器失敗:', error);
-        updateCounterDisplay(); // 使用默認值
+        console.log('統計數據加載失敗，使用默認值');
+        updateStats();
     }
 }
 
-// 更新計數器顯示
-function updateCounterDisplay() {
-    console.log('🔄 更新計數器顯示:', serviceCounters);
+// 更新統計顯示
+function updateStats() {
+    const elements = {
+        today: document.getElementById('todayCount'),
+        month: document.getElementById('monthCount'),
+        total: document.getElementById('totalCount')
+    };
     
-    const todayCount = document.getElementById('todayCount');
-    const monthCount = document.getElementById('monthCount');
-    const totalCount = document.getElementById('totalCount');
-    
-    if (todayCount) {
-        todayCount.textContent = serviceCounters.today.toLocaleString();
-        console.log('✅ 今日服務更新為:', serviceCounters.today);
-    } else {
-        console.error('❌ 找不到 todayCount 元素');
-    }
-    
-    if (monthCount) {
-        monthCount.textContent = serviceCounters.thisMonth.toLocaleString();
-        console.log('✅ 本月服務更新為:', serviceCounters.thisMonth);
-    } else {
-        console.error('❌ 找不到 monthCount 元素');
-    }
-    
-    if (totalCount) {
-        totalCount.textContent = serviceCounters.total.toLocaleString();
-        console.log('✅ 累計服務更新為:', serviceCounters.total);
-    } else {
-        console.error('❌ 找不到 totalCount 元素');
-    }
+    if (elements.today) elements.today.textContent = stats.today || 0;
+    if (elements.month) elements.month.textContent = stats.thisMonth || 0;
+    if (elements.total) elements.total.textContent = stats.total || 0;
 }
 
 
@@ -658,8 +628,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 創建全局實例
     window.bilibiliParser = new BilibiliParser();
     
-    // 加載計數器數據
-    loadCounters();
+    // 加載統計數據
+    loadStats();
     
     // 添加一些額外的功能
     addKeyboardShortcuts();

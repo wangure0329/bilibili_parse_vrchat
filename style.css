@@ -783,3 +783,81 @@ body {
         transform: translate(-50%, -50%) scale(1.2);
     }
 }
+
+/* 新計數器設計 */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, rgba(0, 174, 240, 0.1), rgba(138, 43, 226, 0.1));
+    border: 2px solid rgba(0, 174, 240, 0.3);
+    border-radius: 15px;
+    padding: 20px 25px;
+    text-align: center;
+    min-width: 140px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 174, 240, 0.05), rgba(138, 43, 226, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0, 174, 240, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 174, 240, 0.2);
+}
+
+.stat-box:hover::before {
+    opacity: 1;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: #00aef0;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(0, 174, 240, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .stats-container {
+        gap: 15px;
+    }
+    
+    .stat-box {
+        min-width: 110px;
+        padding: 15px 20px;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+    }
+}
