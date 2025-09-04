@@ -404,7 +404,7 @@ app.use(express.static('.'));
 app.listen(PORT, () => {
     console.log(`🚀 VRC Bilibili 解析服務器已啟動`);
     console.log(`📍 本地地址: http://localhost:${PORT}`);
-    console.log(`🌐 網路地址: http://192.168.0.10:${PORT}`);
+    console.log(`🌐 網路地址: http://0.0.0.0:${PORT}`);
     console.log(`🌍 正式網址: https://vrcbilibili.xn--o8z.tw/`);
     console.log(`💡 使用方式: https://vrcbilibili.xn--o8z.tw/?url=BILIBILI_URL`);
 });
