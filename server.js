@@ -16,8 +16,8 @@ app.use(express.json());
 // 配置 Express 來獲取真實 IP 地址
 app.set('trust proxy', true);
 
-// 解析並重定向到 720P 流地址的函數
-async function parseAndRedirectTo720P(req, res, bvid) {
+// 解析並重定向到 1440P 流地址的函數
+async function parseAndRedirectTo1440P(req, res, bvid) {
     try {
         // 嘗試多種方式獲取真實 IP
         let clientIP = req.ip || 
@@ -55,8 +55,8 @@ async function parseAndRedirectTo720P(req, res, bvid) {
             const videoData = videoInfoResponse.data.data;
             const cid = videoData.cid;
             
-            // 只嘗試獲取 720P 流地址
-            const streamResponse = await axios.get(`https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=64&fnval=16&platform=html5`, {
+            // 嘗試獲取 1440P 流地址
+            const streamResponse = await axios.get(`https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=112&fnval=16&platform=html5`, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                     'Referer': 'https://www.bilibili.com/'
@@ -65,19 +65,19 @@ async function parseAndRedirectTo720P(req, res, bvid) {
             
             if (streamResponse.data.code === 0) {
                 const streamData = streamResponse.data.data;
-                // 優先選擇 DASH 格式的 720P 視頻流
+                // 優先選擇 DASH 格式的 1440P 視頻流
                 if (streamData.dash && streamData.dash.video) {
-                    const dash720P = streamData.dash.video.find(item => item.id === 64);
-                    if (dash720P) {
+                    const dash1440P = streamData.dash.video.find(item => item.id === 112);
+                    if (dash1440P) {
                         // 將所有CDN節點替換為主節點
-                        let mainNodeUrl = dash720P.baseUrl;
+                        let mainNodeUrl = dash1440P.baseUrl;
                         mainNodeUrl = mainNodeUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, 'upos-sz-estgoss.bilivideo.com');
                         mainNodeUrl = mainNodeUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, 'upos-sz-estgoss.bilivideo.com');
                         mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, 'upos-sz-estgoss.bilivideo.com');
                         mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, 'upos-sz-estgoss.bilivideo.com');
                         mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, 'upos-sz-estgoss.bilivideo.com');
                         
-                        console.log(`✅ 解析成功 | 格式: DASH | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
+                        console.log(`✅ 解析成功 | 格式: DASH | 品質: 1440P | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
                         return res.redirect(mainNodeUrl);
                     }
                 }
@@ -92,7 +92,7 @@ async function parseAndRedirectTo720P(req, res, bvid) {
                     mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, 'upos-sz-estgoss.bilivideo.com');
                     mainNodeUrl = mainNodeUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, 'upos-sz-estgoss.bilivideo.com');
                     
-                    console.log(`✅ 解析成功 | 格式: FLV | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
+                    console.log(`✅ 解析成功 | 格式: FLV | 品質: 1440P | 時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
                     return res.redirect(mainNodeUrl);
                 }
             }
@@ -158,8 +158,8 @@ app.get('/', (req, res) => {
             }
 
             if (bvid) {
-                // 解析影片並重定向到 720P 流地址
-                return parseAndRedirectTo720P(req, res, bvid);
+                // 解析影片並重定向到 1440P 流地址
+                return parseAndRedirectTo1440P(req, res, bvid);
             }
         }
 
@@ -243,9 +243,9 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
             const cid = videoData.cid;
             const title = videoData.title;
             
-            // 只獲取 720P 清晰度的流地址
+            // 嘗試獲取 1440P 清晰度的流地址
             const qualityRequests = [
-                { qn: 64, name: '720P', desc: '高清' }
+                { qn: 112, name: '1440P', desc: '2K超高清' }
             ];
             
             const streamPromises = qualityRequests.map(async (quality) => {
