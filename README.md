@@ -202,14 +202,8 @@ docker-compose up -d --build
 
 - **主節點列表**:
   - `upos-sz-estgoss.bilivideo.com` - 深圳節點 (GOSS)
-  - `upos-sz-estgcos.bilivideo.com` - 深圳節點 (GCOS)
-  - `upos-sz-estghw.bilivideo.com` - 深圳節點 (GHW)
   - `upos-bj-estgoss.bilivideo.com` - 北京節點 (GOSS)
-  - `upos-bj-estgcos.bilivideo.com` - 北京節點 (GCOS)
-  - `upos-bj-estghw.bilivideo.com` - 北京節點 (GHW)
   - `upos-hz-estgoss.bilivideo.com` - 杭州節點 (GOSS)
-  - `upos-hz-estgcos.bilivideo.com` - 杭州節點 (GCOS)
-  - `upos-hz-estghw.bilivideo.com` - 杭州節點 (GHW)
 
 - **智能選擇**: 根據歷史成功率自動選擇最穩定的節點
 - **自動替換**: 所有其他 CDN 節點都會自動替換為選中的最佳節點
@@ -275,14 +269,14 @@ GET /?url=BILIBILI_URL
 - 本工具僅供學習交流使用
 - 請尊重創作者的版權，不要濫用解析功能
 - **品質限制**: 僅支援 1440P (2K) 解析，提供最高畫質
-- **節點穩定性**: 使用智能節點選擇，自動選擇最穩定的節點
+- **節點穩定性**: 使用智能節點選擇，從三個節點中自動選擇最穩定的節點
 - **解析時間**: 平均解析時間約 300-500ms，超時會自動重試
 - **地理位置**: 系統會記錄請求者的地理位置資訊
 - **服務統計**: 系統會統計服務使用次數，用於監控和分析
 - 部分影片可能受地區限制
 - 解析 API 可能隨時變更，請以實際情況為準
 - **本地測試**: 本地環境會顯示 `::1` IP，這是正常的
-- **節點選擇**: 系統會根據歷史成功率自動選擇最佳節點
+- **節點選擇**: 系統會從三個節點中根據歷史成功率自動選擇最佳節點
 
 ## 免責聲明
 
