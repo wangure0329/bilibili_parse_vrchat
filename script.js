@@ -7,6 +7,7 @@ let serviceCounters = {
     thisMonth: 0
 };
 
+
 // 加載計數器數據
 async function loadCounters() {
     try {
@@ -21,6 +22,7 @@ async function loadCounters() {
     }
 }
 
+
 // 更新計數器顯示
 function updateCounterDisplay() {
     const todayCount = document.getElementById('todayCount');
@@ -31,6 +33,7 @@ function updateCounterDisplay() {
     if (monthCount) monthCount.textContent = serviceCounters.thisMonth.toLocaleString();
     if (totalCount) totalCount.textContent = serviceCounters.total.toLocaleString();
 }
+
 
 // 語言切換功能
 const translations = {
@@ -46,7 +49,6 @@ const translations = {
         'size': '大小',
         'duration': '時長',
         'video': '影片',
-        'live': '直播',
         'noResults': '沒有找到解析結果',
         'invalidUrl': '請輸入有效的 Bilibili 連結',
         'networkError': '網路錯誤，請稍後重試',
@@ -56,12 +58,10 @@ const translations = {
         'directLink': '直鏈獲取',
         'noLogin': '無需登入',
         'supportVideo': '支援影片',
-        'supportLive': '支援直播',
         'modernUI': '現代化界面',
         'responsive': '響應式設計',
         'example': '範例',
         'exampleVideo': '影片範例',
-        'exampleLive': '直播範例',
         'parseResult': '解析結果',
         'techSupport': '技術支援',
         'author': 'by りん',
@@ -258,19 +258,10 @@ class BilibiliParser {
     async parseUrl(url) {
         const results = [];
         
-        // 判斷是影片還是直播
-        if (url.includes('live.bilibili.com')) {
-            // 直播解析
-            const roomId = this.extractRoomId(url);
-            if (roomId) {
-                results.push(...await this.parseLive(roomId));
-            }
-        } else {
-            // 影片解析
-            const bvid = this.extractBvid(url);
-            if (bvid) {
-                results.push(...await this.parseVideo(bvid, url));
-            }
+        // 影片解析
+        const bvid = this.extractBvid(url);
+        if (bvid) {
+            results.push(...await this.parseVideo(bvid, url));
         }
 
         return results;
@@ -293,11 +284,6 @@ class BilibiliParser {
         return null;
     }
 
-    extractRoomId(url) {
-        // 提取直播間 ID
-        const match = url.match(/live\.bilibili\.com\/(\d+)/);
-        return match ? match[1] : null;
-    }
 
     async parseVideo(bvid, originalUrl) {
         const results = [];
