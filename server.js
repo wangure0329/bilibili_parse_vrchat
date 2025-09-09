@@ -574,23 +574,30 @@ app.get('/niche/', (req, res) => {
         console.log(`   語言: ${acceptLanguage.substring(0, 20)}... | 來源: ${referer.substring(0, 30)}...`);
         console.log(`   ⏱️ 請求開始時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
 
-        // 檢查是否是 Bilibili 影片連結
-        if (url.includes('bilibili.com/video/') || url.includes('bvid=')) {
+        // 檢查是否是 Bilibili 影片連結，支援多種格式
+        let processedUrl = url;
+        
+        // 如果沒有協議，自動添加 https://
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            processedUrl = 'https://' + url;
+        }
+        
+        if (processedUrl.includes('bilibili.com/video/') || processedUrl.includes('bvid=')) {
             // 提取 BV 號和分P
             let bvid = null;
             let p = 1;
 
-            if (url.includes('/video/')) {
-                const match = url.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+            if (processedUrl.includes('/video/')) {
+                const match = processedUrl.match(/\/video\/(BV[a-zA-Z0-9]+)/);
                 if (match) bvid = match[1];
 
-                const pMatch = url.match(/[?&]p=(\d+)/);
+                const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
-            } else if (url.includes('bvid=')) {
-                const match = url.match(/bvid=(BV[a-zA-Z0-9]+)/);
+            } else if (processedUrl.includes('bvid=')) {
+                const match = processedUrl.match(/bvid=(BV[a-zA-Z0-9]+)/);
                 if (match) bvid = match[1];
 
-                const pMatch = url.match(/[?&]p=(\d+)/);
+                const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
             }
 
@@ -689,23 +696,30 @@ app.get('/', (req, res) => {
         console.log(`   語言: ${acceptLanguage.substring(0, 20)}... | 來源: ${referer.substring(0, 30)}...`);
         console.log(`   ⏱️ 請求開始時間: ${new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})}`);
 
-        // 檢查是否是 Bilibili 影片連結
-        if (url.includes('bilibili.com/video/') || url.includes('bvid=')) {
+        // 檢查是否是 Bilibili 影片連結，支援多種格式
+        let processedUrl = url;
+        
+        // 如果沒有協議，自動添加 https://
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            processedUrl = 'https://' + url;
+        }
+        
+        if (processedUrl.includes('bilibili.com/video/') || processedUrl.includes('bvid=')) {
             // 提取 BV 號和分P
             let bvid = null;
             let p = 1;
 
-            if (url.includes('/video/')) {
-                const match = url.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+            if (processedUrl.includes('/video/')) {
+                const match = processedUrl.match(/\/video\/(BV[a-zA-Z0-9]+)/);
                 if (match) bvid = match[1];
 
-                const pMatch = url.match(/[?&]p=(\d+)/);
+                const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
-            } else if (url.includes('bvid=')) {
-                const match = url.match(/bvid=(BV[a-zA-Z0-9]+)/);
+            } else if (processedUrl.includes('bvid=')) {
+                const match = processedUrl.match(/bvid=(BV[a-zA-Z0-9]+)/);
                 if (match) bvid = match[1];
 
-                const pMatch = url.match(/[?&]p=(\d+)/);
+                const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
             }
 

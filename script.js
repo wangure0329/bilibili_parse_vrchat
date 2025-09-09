@@ -287,6 +287,12 @@ class BilibiliParser {
     }
 
     isValidBilibiliUrl(url) {
+        // 如果沒有協議，自動添加 https://
+        let processedUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            processedUrl = 'https://' + url;
+        }
+        
         const patterns = [
             /https?:\/\/(www\.)?bilibili\.com\/video\/BV[a-zA-Z0-9]+/,
             /https?:\/\/live\.bilibili\.com\/\d+/,
@@ -294,7 +300,7 @@ class BilibiliParser {
             /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/
         ];
         
-        return patterns.some(pattern => pattern.test(url));
+        return patterns.some(pattern => pattern.test(processedUrl));
     }
 
     async parseUrl(url) {
@@ -322,6 +328,12 @@ class BilibiliParser {
     }
 
     extractBvid(url) {
+        // 如果沒有協議，自動添加 https://
+        let processedUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            processedUrl = 'https://' + url;
+        }
+        
         // 提取 BV 號
         const patterns = [
             /\/video\/(BV[a-zA-Z0-9]+)/,
@@ -330,7 +342,7 @@ class BilibiliParser {
         ];
 
         for (const pattern of patterns) {
-            const match = url.match(pattern);
+            const match = processedUrl.match(pattern);
             if (match) {
                 return match[1] || match[0];
             }
