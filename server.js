@@ -98,18 +98,8 @@ function getCounters() {
 const nodeStatus = {
     // 深圳節點 (華南)
     'upos-sz-estgoss.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '深圳' },
-    'upos-sz-estgcos.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '深圳' },
-    'upos-sz-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '深圳' },
-    
-    // 北京節點 (華北)
     'upos-bj-estgoss.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '北京' },
-    'upos-bj-estgcos.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '北京' },
-    'upos-bj-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '北京' },
-    
-    // 杭州節點 (華東)
     'upos-hz-estgoss.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
-    'upos-hz-estgcos.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
-    'upos-hz-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
     
     // Mirror 節點 (專用，不參與智能選擇)
     'upos-sz-mirror08c.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: 'Mirror', isMirror: true }
@@ -894,19 +884,12 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 替換所有CDN節點
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             
-                            // 替換國際CDN節點
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
+                            // 替換 akamaized.net 節點
                             newUrl = newUrl.replace(/upos-sz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-sz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-bj-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            
-                            // 通用替換（備用）
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                             const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
@@ -940,19 +923,12 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 替換所有CDN節點
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             
-                            // 替換國際CDN節點
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
+                            // 替換 akamaized.net 節點
                             newUrl = newUrl.replace(/upos-sz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-sz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-bj-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            
-                            // 通用替換（備用）
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                             const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
@@ -986,19 +962,12 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             // 替換所有CDN節點
                             let newUrl = originalUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.bilivideo\.com/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.bilivideo\.com/, selectedMainNode);
                             
-                            // 替換國際CDN節點
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
+                            // 替換 akamaized.net 節點
                             newUrl = newUrl.replace(/upos-sz-[^/]+\.akamaized\.net/, selectedMainNode);
                             newUrl = newUrl.replace(/upos-bj-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-hz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-sz-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-bj-[^/]+\.cloudfront\.net/, selectedMainNode);
-                            
-                            // 通用替換（備用）
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.bilivideo\.com/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.akamaized\.net/, selectedMainNode);
-                            newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
+                            newUrl = newUrl.replace(/upos-hz-[^/]+\.akamaized\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                                 const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
