@@ -5,6 +5,10 @@ const axios = require('axios');
 const geoip = require('geoip-lite');
 
 const app = express();
+
+// 設置模板引擎
+app.set('view engine', 'ejs');
+app.set('views', __dirname);
 const PORT = process.env.PORT || 3000;
 
 // 服務計數器
@@ -567,12 +571,20 @@ app.get('/niche/', (req, res) => {
         // 檢查是否是 Bilibili 影片連結，支援多種格式
         let processedUrl = url;
         
-        // 如果沒有協議，自動添加 https://
+        // 智能處理各種 URL 格式
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            processedUrl = 'https://' + url;
+            // 如果沒有協議，自動添加 https://
+            if (url.startsWith('www.bilibili.com') || url.startsWith('bilibili.com')) {
+                processedUrl = 'https://' + url;
+            } else if (url.startsWith('BV')) {
+                // 如果直接是 BV 號，構建完整 URL
+                processedUrl = 'https://www.bilibili.com/video/' + url;
+            } else {
+                processedUrl = 'https://' + url;
+            }
         }
         
-        if (processedUrl.includes('bilibili.com/video/') || processedUrl.includes('bvid=')) {
+        if (processedUrl.includes('bilibili.com') || processedUrl.includes('bvid=') || processedUrl.includes('BV')) {
             // 提取 BV 號和分P
             let bvid = null;
             let p = 1;
@@ -589,6 +601,10 @@ app.get('/niche/', (req, res) => {
 
                 const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
+            } else if (processedUrl.includes('BV')) {
+                // 直接從 URL 中提取 BV 號
+                const match = processedUrl.match(/(BV[a-zA-Z0-9]+)/);
+                if (match) bvid = match[1];
             }
 
             if (bvid) {
@@ -689,12 +705,20 @@ app.get('/', (req, res) => {
         // 檢查是否是 Bilibili 影片連結，支援多種格式
         let processedUrl = url;
         
-        // 如果沒有協議，自動添加 https://
+        // 智能處理各種 URL 格式
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            processedUrl = 'https://' + url;
+            // 如果沒有協議，自動添加 https://
+            if (url.startsWith('www.bilibili.com') || url.startsWith('bilibili.com')) {
+                processedUrl = 'https://' + url;
+            } else if (url.startsWith('BV')) {
+                // 如果直接是 BV 號，構建完整 URL
+                processedUrl = 'https://www.bilibili.com/video/' + url;
+            } else {
+                processedUrl = 'https://' + url;
+            }
         }
         
-        if (processedUrl.includes('bilibili.com/video/') || processedUrl.includes('bvid=')) {
+        if (processedUrl.includes('bilibili.com') || processedUrl.includes('bvid=') || processedUrl.includes('BV')) {
             // 提取 BV 號和分P
             let bvid = null;
             let p = 1;
@@ -711,11 +735,39 @@ app.get('/', (req, res) => {
 
                 const pMatch = processedUrl.match(/[?&]p=(\d+)/);
                 if (pMatch) p = parseInt(pMatch[1]);
+            } else if (processedUrl.includes('BV')) {
+                // 直接從 URL 中提取 BV 號
+                const match = processedUrl.match(/(BV[a-zA-Z0-9]+)/);
+                if (match) bvid = match[1];
             }
 
             if (bvid) {
-                // 顯示解析結果頁面而不是直接重定向
-                return res.sendFile(path.join(__dirname, 'index.html'));
+                // 直接導向到解析結果
+                return parseAndRedirectTo1440P(req, res, bvid);
+            } else {
+                // 如果是 Bilibili 連結但沒有找到 BV 號，顯示錯誤
+                return res.send(`
+                    <!DOCTYPE html>
+                    <html lang="zh-TW">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>解析失敗</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; text-align: center; padding: 50px; }
+                            .error { background: #333; padding: 20px; border-radius: 8px; border: 2px solid #ff4444; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error">
+                            <h2>❌ 解析失敗</h2>
+                            <p>請提供完整的 Bilibili 影片連結，包含 BV 號</p>
+                            <p>例如：https://www.bilibili.com/video/BV1xx411c7mu</p>
+                            <p><a href="/" style="color: #4CAF50;">返回首頁</a></p>
+                        </div>
+                    </body>
+                    </html>
+                `);
             }
         }
 
