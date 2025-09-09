@@ -6,9 +6,6 @@ const geoip = require('geoip-lite');
 
 const app = express();
 
-// 設置模板引擎
-app.set('view engine', 'ejs');
-app.set('views', __dirname);
 const PORT = process.env.PORT || 3000;
 
 // 服務計數器
