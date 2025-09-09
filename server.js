@@ -112,7 +112,7 @@ const nodeStatus = {
     'upos-hz-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
     
     // Mirror 節點 (專用，不參與智能選擇)
-    'upos-sz-mirrorcos.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: 'Mirror', isMirror: true }
+    'upos-sz-mirror08c.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: 'Mirror', isMirror: true }
 };
 
 // 檢查節點是否可用
@@ -353,7 +353,7 @@ async function parseVideoWithRetryForNiche(bvid, maxRetries = 3) {
                     if (streamData.dash && streamData.dash.video) {
                         const dash1440P = streamData.dash.video.find(item => item.id === 112);
                         if (dash1440P) {
-                            const selectedMainNode = 'upos-sz-mirrorcos.bilivideo.com'; // 強制使用 niche 節點
+                            const selectedMainNode = 'upos-sz-mirror08c.bilivideo.com'; // 強制使用 niche 節點
                             let mainNodeUrl = dash1440P.baseUrl;
                             // 替換所有CDN節點為 niche 節點
                             mainNodeUrl = mainNodeUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
@@ -389,7 +389,7 @@ async function parseVideoWithRetryForNiche(bvid, maxRetries = 3) {
                     
                     // 如果沒有 DASH，選擇 FLV 格式
                     if (streamData.durl && streamData.durl.length > 0) {
-                        const selectedMainNode = 'upos-sz-mirrorcos.bilivideo.com'; // 強制使用 niche 節點
+                        const selectedMainNode = 'upos-sz-mirror08c.bilivideo.com'; // 強制使用 niche 節點
                         let mainNodeUrl = streamData.durl[0].url;
                         // 替換所有CDN節點為 niche 節點
                         mainNodeUrl = mainNodeUrl.replace(/upos-sz-[^/]+\.bilivideo\.com/, selectedMainNode);
@@ -568,7 +568,7 @@ app.get('/niche/', (req, res) => {
         const location = getLocationInfo(clientIP);
         
         const startTime = Date.now();
-        console.log(`🎯 Niche 解析請求: ${url} (強制使用 upos-sz-mirrorcos.bilivideo.com)`);
+        console.log(`🎯 Niche 解析請求: ${url} (強制使用 upos-sz-mirror08c.bilivideo.com)`);
         console.log(`   請求者: ${clientIP} | 位置: ${location} | 時間: ${timestamp}`);
         console.log(`   瀏覽器: ${userAgent.substring(0, 50)}...`);
         console.log(`   語言: ${acceptLanguage.substring(0, 20)}... | 來源: ${referer.substring(0, 30)}...`);
@@ -647,7 +647,7 @@ app.get('/niche/', (req, res) => {
             <div class="container">
                 <div class="niche-info">
                     <h1>🎯 Niche 解析工具</h1>
-                    <p>此工具專門使用 <strong>upos-sz-mirrorcos.bilivideo.com</strong> 節點進行解析</p>
+                    <p>此工具專門使用 <strong>upos-sz-mirror08c.bilivideo.com</strong> 節點進行解析</p>
                     <p>使用方式：<code>/niche/?url=BILIBILI_URL</code></p>
                     <p>適用於需要特定節點解析的場景</p>
                 </div>
@@ -872,7 +872,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     
                     if (streamData.durl && streamData.durl.length > 0) {
                         // FLV 格式 - 根據參數選擇節點
-                        const selectedMainNode = useMirror ? 'upos-sz-mirrorcos.bilivideo.com' : await getBestAvailableNode(bvid);
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.durl) {
                             const originalUrl = item.url;
@@ -895,7 +895,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
-                            const nodeDescription = selectedMainNode === 'upos-sz-mirrorcos.bilivideo.com' 
+                            const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
                                 ? `中文咖啡廳適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
                                 : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈)`;
                             
@@ -918,7 +918,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     
                     if (streamData.dash && streamData.dash.video) {
                         // DASH 格式 - 根據參數選擇節點
-                        const selectedMainNode = useMirror ? 'upos-sz-mirrorcos.bilivideo.com' : await getBestAvailableNode(bvid);
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.dash.video) {
                             const originalUrl = item.baseUrl;
@@ -941,7 +941,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
-                            const nodeDescription = selectedMainNode === 'upos-sz-mirrorcos.bilivideo.com' 
+                            const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
                                 ? `中文咖啡廳適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
                                 : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈)`;
                             
@@ -964,7 +964,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     
                     if (streamData.dash && streamData.dash.audio) {
                         // DASH 音頻 - 根據參數選擇節點
-                        const selectedMainNode = useMirror ? 'upos-sz-mirrorcos.bilivideo.com' : await getBestAvailableNode(bvid);
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.dash.audio) {
                             const originalUrl = item.baseUrl;
@@ -987,9 +987,9 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             newUrl = newUrl.replace(/upos-[^/]+-[^/]+\.cloudfront\.net/, selectedMainNode);
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
-                            const nodeDescription = selectedMainNode === 'upos-sz-mirrorcos.bilivideo.com' 
-                                ? `中文咖啡廳適配 - 高品質音頻 (已繞過防盜鏈)`
-                                : `主CDN節點: ${selectedMainNode} - 高品質音頻 (已繞過防盜鏈)`;
+                                const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
+                                    ? `中文咖啡廳適配 - 高品質音頻 (已繞過防盜鏈)`
+                                    : `主CDN節點: ${selectedMainNode} - 高品質音頻 (已繞過防盜鏈)`;
                             
                             results.push({
                                 title: `${quality.name} DASH 音頻流 (主節點)`,

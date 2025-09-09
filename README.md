@@ -13,6 +13,8 @@
 - ⚡ **快速解析**：使用智能節點選擇，確保解析成功率
 - 🌍 **多語言支援**：支援繁體中文、簡體中文、日文
 - 📊 **服務統計**：實時顯示今日、本月、累計服務次數
+- 🎯 **專用節點**：中文咖啡廳專用解析節點，適配特殊需求
+- 🔄 **多種解析方式**：支援智能選擇、專用節點、直接重定向三種模式
 
 ## 使用方法
 
@@ -25,10 +27,16 @@
 
 ### URL 參數支援
 
-網站支援 URL 參數直接解析：
+網站支援多種 URL 參數直接解析：
 
+#### 智能選擇解析
 ```
 https://vrcbilibili.xn--o8z.tw/?url=https://www.bilibili.com/video/BV1xx411c7mu
+```
+
+#### 中文咖啡廳專用解析
+```
+https://vrcbilibili.xn--o8z.tw/niche/?url=https://www.bilibili.com/video/BV1xx411c7mu
 ```
 
 ### 支援的連結格式
@@ -198,31 +206,62 @@ docker-compose up -d --build
 
 ### 🎯 智能節點管理
 
-本工具採用**智能節點選擇策略**，基於歷史成功率自動選擇最佳節點：
+本工具採用**多層節點選擇策略**，提供三種不同的解析模式：
 
-- **主節點列表**:
-  - `upos-sz-estgoss.bilivideo.com` - 深圳節點 (GOSS)
-  - `upos-bj-estgoss.bilivideo.com` - 北京節點 (GOSS)
-  - `upos-hz-estgoss.bilivideo.com` - 杭州節點 (GOSS)
+#### 智能選擇節點（9個主要節點）
+- **深圳節點 (華南)**:
+  - `upos-sz-estgoss.bilivideo.com` - GOSS 節點
+  - `upos-sz-estgcos.bilivideo.com` - GCOS 節點
+  - `upos-sz-estghw.bilivideo.com` - GHW 節點
 
-- **智能選擇**: 根據歷史成功率自動選擇最穩定的節點
-- **自動替換**: 所有其他 CDN 節點都會自動替換為選中的最佳節點
+- **北京節點 (華北)**:
+  - `upos-bj-estgoss.bilivideo.com` - GOSS 節點
+  - `upos-bj-estgcos.bilivideo.com` - GCOS 節點
+  - `upos-bj-estghw.bilivideo.com` - GHW 節點
+
+- **杭州節點 (華東)**:
+  - `upos-hz-estgoss.bilivideo.com` - GOSS 節點
+  - `upos-hz-estgcos.bilivideo.com` - GCOS 節點
+  - `upos-hz-estghw.bilivideo.com` - GHW 節點
+
+#### 專用節點
+- **中文咖啡廳節點**:
+  - `upos-sz-mirrorcos.bilivideo.com` - Mirror 節點（專用，不參與智能選擇）
+
+#### 節點選擇策略
+- **智能選擇**: 根據歷史成功率從 9 個主要節點中自動選擇最穩定的節點
+- **專用節點**: 中文咖啡廳欄位和 `/niche/` 路由強制使用 Mirror 節點
+- **自動替換**: 所有其他 CDN 節點都會自動替換為選中的節點
 - **成功率追蹤**: 實時追蹤每個節點的成功和失敗次數
 - **支援節點格式**:
-  - `upos-sz-*.bilivideo.com` → 選中的最佳節點
-  - `upos-bj-*.bilivideo.com` → 選中的最佳節點
-  - `upos-hz-*.bilivideo.com` → 選中的最佳節點
-  - `upos-*-*-*.akamaized.net` → 選中的最佳節點
-  - `upos-*-*-*.cloudfront.net` → 選中的最佳節點
+  - `upos-sz-*.bilivideo.com` → 選中的節點
+  - `upos-bj-*.bilivideo.com` → 選中的節點
+  - `upos-hz-*.bilivideo.com` → 選中的節點
+  - `upos-*-*-*.akamaized.net` → 選中的節點
+  - `upos-*-*-*.cloudfront.net` → 選中的節點
 
-### 🔄 自動重定向機制
+### 🔄 多種解析機制
 
-當使用 `/?url=BILIBILI_URL` 格式時：
+#### 智能選擇解析 (`/?url=BILIBILI_URL`)
 1. 系統會自動解析影片
 2. 獲取 1440P (2K) 品質的流地址
-3. 智能選擇最佳 CDN 節點
-4. 將所有 CDN 節點替換為最佳節點
-5. 直接重定向到最佳節點地址
+3. 從 9 個主要節點中智能選擇最佳節點
+4. 將所有 CDN 節點替換為選中的節點
+5. 直接重定向到選中的節點地址
+
+#### 中文咖啡廳專用解析 (`/niche/?url=BILIBILI_URL`)
+1. 系統會自動解析影片
+2. 獲取 1440P (2K) 品質的流地址
+3. 強制使用 `upos-sz-mirrorcos.bilivideo.com` 節點
+4. 將所有 CDN 節點替換為 Mirror 節點
+5. 直接重定向到 Mirror 節點地址
+
+#### 前端專用欄位解析
+1. 使用中文咖啡廳專用欄位輸入連結
+2. 調用 `/api/parse/video/:bvid?mirror=true` API
+3. 強制使用 `upos-sz-mirrorcos.bilivideo.com` 節點
+4. 顯示 "中文咖啡廳適配" 備註
+5. 提供多種格式的流地址供選擇
 
 ### 📊 日誌監控
 
@@ -256,13 +295,29 @@ GET /api/counters
 - **返回**: 今日、本月、累計服務次數
 - **功能**: 獲取服務使用統計
 
-#### 重定向解析
+#### 智能選擇重定向解析
 ```
 GET /?url=BILIBILI_URL
 ```
 - **參數**: `url` - Bilibili 影片連結
 - **返回**: 直接重定向到解析後的流地址
-- **功能**: 一鍵解析並重定向
+- **功能**: 一鍵解析並重定向（使用智能節點選擇）
+
+#### 中文咖啡廳專用重定向解析
+```
+GET /niche/?url=BILIBILI_URL
+```
+- **參數**: `url` - Bilibili 影片連結
+- **返回**: 直接重定向到解析後的流地址
+- **功能**: 一鍵解析並重定向（強制使用 Mirror 節點）
+
+#### 專用節點 API 解析
+```
+GET /api/parse/video/:bvid?mirror=true
+```
+- **參數**: `bvid` - Bilibili 影片 ID，`mirror=true` - 使用 Mirror 節點
+- **返回**: JSON 格式的解析結果
+- **功能**: 解析影片並返回 1440P 流地址（顯示 "中文咖啡廳適配" 備註）
 
 ## 注意事項
 
@@ -283,6 +338,14 @@ GET /?url=BILIBILI_URL
 本工具僅用於學習研究，請勿用於非法用途。使用本工具產生的一切後果由使用者自行承擔。
 
 ## 更新日誌
+
+### v1.6.0 (2025-01-15)
+- **專用節點支援**: 新增中文咖啡廳專用解析節點 `upos-sz-mirrorcos.bilivideo.com`
+- **多種解析模式**: 支援智能選擇、專用節點、直接重定向三種解析方式
+- **前端專用欄位**: 新增中文咖啡廳專用輸入欄位，顯示 "中文咖啡廳適配" 備註
+- **專用路由**: 新增 `/niche/?url=` 路由，強制使用 Mirror 節點
+- **節點隔離**: Mirror 節點不參與智能選擇，僅作為專用節點使用
+- **備註修復**: 修復專用節點解析結果的備註顯示問題
 
 ### v1.5.0 (2025-01-15)
 - **移除直播功能**: 專注於影片解析，提高系統穩定性
