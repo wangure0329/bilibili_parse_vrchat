@@ -724,8 +724,8 @@ app.get('/', (req, res) => {
             }
 
             if (bvid) {
-                // 解析影片並重定向到 1440P 流地址
-                return parseAndRedirectTo1440P(req, res, bvid);
+                // 顯示解析結果頁面而不是直接重定向
+                return res.sendFile(path.join(__dirname, 'index.html'));
             }
         }
 

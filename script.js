@@ -536,18 +536,36 @@ class BilibiliParser {
         
         const icon = this.getIconForType(result.type);
         
+        // 處理流地址，避免自動下載
+        const displayUrl = result.type === 'stream' ? 
+            `${result.url.substring(0, 50)}...` : 
+            result.url;
+        
         item.innerHTML = `
             <div class="result-title">
                 <i class="${icon}"></i>
                 ${result.title}
             </div>
-            <div class="result-url">${result.url}</div>
+            <div class="result-url" style="word-break: break-all;">${displayUrl}</div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <small style="color: var(--text-secondary);">${result.description}</small>
-                <button class="copy-btn" onclick="bilibiliParser.copyToClipboard('${result.url}')">
-                    <i class="fas fa-copy"></i>
-                    ${translations[currentLang]['copy']}
-                </button>
+                <div>
+                    ${result.type === 'stream' ? `
+                        <button class="copy-btn" onclick="bilibiliParser.copyToClipboard('${result.url}')" style="margin-right: 8px;">
+                            <i class="fas fa-copy"></i>
+                            ${translations[currentLang]['copy']}
+                        </button>
+                        <button class="copy-btn" onclick="window.open('${result.url}', '_blank')" style="background: var(--accent-color);">
+                            <i class="fas fa-external-link-alt"></i>
+                            播放
+                        </button>
+                    ` : `
+                        <button class="copy-btn" onclick="bilibiliParser.copyToClipboard('${result.url}')">
+                            <i class="fas fa-copy"></i>
+                            ${translations[currentLang]['copy']}
+                        </button>
+                    `}
+                </div>
             </div>
         `;
         

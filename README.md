@@ -45,6 +45,8 @@ https://vrcbilibili.xn--o8z.tw/niche/?url=https://www.bilibili.com/video/BV1xx41
   - `https://www.bilibili.com/video/BV1xx411c7mu`
   - `https://www.bilibili.com/video/BV1xx411c7mu?p=1`
   - `https://www.bilibili.com/bangumi/play/ss12345`
+  - `bilibili.com/video/BV1xx411c7mu` （自動添加 https://）
+  - `www.bilibili.com/video/BV1xx411c7mu` （自動添加 https://）
 
 ## 技術特性
 
@@ -338,6 +340,13 @@ GET /api/parse/video/:bvid?mirror=true
 本工具僅用於學習研究，請勿用於非法用途。使用本工具產生的一切後果由使用者自行承擔。
 
 ## 更新日誌
+
+### v1.7.0 (2025-01-15)
+- **URL 格式支援**: 支援不帶協議的 Bilibili URL 解析（如 `bilibili.com/video/BV1xx411c7mu`）
+- **解析結果優化**: 修復解析結果自動下載問題，改為顯示結果頁面
+- **流地址處理**: 流地址只顯示縮短版本，避免觸發自動下載
+- **播放功能**: 新增「播放」按鈕，在新標籤頁中播放流地址
+- **用戶體驗改善**: 優化解析結果的顯示和操作方式
 
 ### v1.6.0 (2025-01-15)
 - **專用節點支援**: 新增中文咖啡廳專用解析節點 `upos-sz-mirror08c.bilivideo.com`
