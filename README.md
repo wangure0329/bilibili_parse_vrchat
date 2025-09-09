@@ -226,7 +226,7 @@ docker-compose up -d --build
 
 #### 專用節點
 - **中文咖啡廳節點**:
-  - `upos-sz-mirrorcos.bilivideo.com` - Mirror 節點（專用，不參與智能選擇）
+  - `upos-sz-mirror08c.bilivideo.com` - Mirror 節點（專用，不參與智能選擇）
 
 #### 節點選擇策略
 - **智能選擇**: 根據歷史成功率從 9 個主要節點中自動選擇最穩定的節點
@@ -252,14 +252,14 @@ docker-compose up -d --build
 #### 中文咖啡廳專用解析 (`/niche/?url=BILIBILI_URL`)
 1. 系統會自動解析影片
 2. 獲取 1440P (2K) 品質的流地址
-3. 強制使用 `upos-sz-mirrorcos.bilivideo.com` 節點
+3. 強制使用 `upos-sz-mirror08c.bilivideo.com` 節點
 4. 將所有 CDN 節點替換為 Mirror 節點
 5. 直接重定向到 Mirror 節點地址
 
 #### 前端專用欄位解析
 1. 使用中文咖啡廳專用欄位輸入連結
 2. 調用 `/api/parse/video/:bvid?mirror=true` API
-3. 強制使用 `upos-sz-mirrorcos.bilivideo.com` 節點
+3. 強制使用 `upos-sz-mirror08c.bilivideo.com` 節點
 4. 顯示 "中文咖啡廳適配" 備註
 5. 提供多種格式的流地址供選擇
 
@@ -340,7 +340,7 @@ GET /api/parse/video/:bvid?mirror=true
 ## 更新日誌
 
 ### v1.6.0 (2025-01-15)
-- **專用節點支援**: 新增中文咖啡廳專用解析節點 `upos-sz-mirrorcos.bilivideo.com`
+- **專用節點支援**: 新增中文咖啡廳專用解析節點 `upos-sz-mirror08c.bilivideo.com`
 - **多種解析模式**: 支援智能選擇、專用節點、直接重定向三種解析方式
 - **前端專用欄位**: 新增中文咖啡廳專用輸入欄位，顯示 "中文咖啡廳適配" 備註
 - **專用路由**: 新增 `/niche/?url=` 路由，強制使用 Mirror 節點
