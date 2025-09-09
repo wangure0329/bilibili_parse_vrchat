@@ -846,6 +846,180 @@ body {
     z-index: 1;
 }
 
+/* Mirror 節點專用欄位樣式 */
+.mirror-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1));
+    border: 2px solid rgba(255, 193, 7, 0.3);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mirror-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.05), rgba(255, 152, 0, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mirror-section:hover::before {
+    opacity: 1;
+}
+
+.mirror-input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.mirror-url-input {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    border-radius: 10px;
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.mirror-url-input:focus {
+    outline: none;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.mirror-url-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.mirror-parse-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.mirror-parse-btn:hover {
+    background: linear-gradient(135deg, #ffb300, #f57c00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+}
+
+.mirror-parse-btn:active {
+    transform: translateY(0);
+}
+
+.mirror-note {
+    color: rgba(255, 193, 7, 0.9);
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    font-style: italic;
+}
+
+/* 使用說明區域樣式 */
+.usage-section {
+    margin-bottom: 40px;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.usage-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+    background: linear-gradient(45deg, var(--bilibili-pink), var(--bilibili-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.usage-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.usage-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    background: var(--dark-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.usage-note::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 174, 240, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.usage-note:hover::before {
+    left: 100%;
+}
+
+.usage-note:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 174, 240, 0.1);
+}
+
+.usage-note i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-top: 2px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.usage-note p {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     .stats-container {
@@ -859,5 +1033,27 @@ body {
     
     .stat-number {
         font-size: 28px;
+    }
+    
+    .mirror-input-group {
+        flex-direction: column;
+    }
+    
+    .mirror-parse-btn {
+        width: 100%;
+    }
+    
+    .usage-notes {
+        gap: 15px;
+    }
+    
+    .usage-note {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .usage-note i {
+        align-self: center;
     }
 }

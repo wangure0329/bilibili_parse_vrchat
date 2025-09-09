@@ -94,7 +94,7 @@ function getCounters() {
     };
 }
 
-// 節點狀態管理 - 簡化為三個主要節點
+// 節點狀態管理 - 三個主要節點 + Mirror 節點
 const nodeStatus = {
     // 深圳節點 (華南)
     'upos-sz-estgoss.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '深圳' },
@@ -109,7 +109,10 @@ const nodeStatus = {
     // 杭州節點 (華東)
     'upos-hz-estgoss.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
     'upos-hz-estgcos.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
-    'upos-hz-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' }
+    'upos-hz-estghw.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: '杭州' },
+    
+    // Mirror 節點 (專用，不參與智能選擇)
+    'upos-sz-mirror08c.bilivideo.com': { available: true, lastCheck: 0, successCount: 0, failCount: 0, region: 'Mirror', isMirror: true }
 };
 
 // 檢查節點是否可用
@@ -133,7 +136,7 @@ async function checkNodeAvailability(node, bvid) {
 
 // 智能選擇最佳節點
 async function getBestAvailableNode(bvid) {
-    const mainNodes = Object.keys(nodeStatus);
+    const mainNodes = Object.keys(nodeStatus).filter(node => !nodeStatus[node].isMirror);
     
     // 按成功率排序，選擇最穩定的節點
     const sortedNodes = mainNodes.sort((a, b) => {
@@ -440,6 +443,7 @@ app.get('/', (req, res) => {
 // API 端點 - 影片解析
 app.get('/api/parse/video/:bvid', async (req, res) => {
     const { bvid } = req.params;
+    const useMirror = req.query.mirror === 'true';
     
     try {
         // 嘗試多種方式獲取真實 IP
@@ -461,7 +465,7 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
         const timestamp = new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'});
         const location = getLocationInfo(clientIP);
         
-        console.log(`🎬 解析影片: ${bvid}`);
+        console.log(`🎬 解析影片: ${bvid}${useMirror ? ' (Mirror 節點)' : ''}`);
         console.log(`   請求者: ${clientIP} | 位置: ${location} | 時間: ${timestamp}`);
         console.log(`   瀏覽器: ${userAgent.substring(0, 50)}...`);
         console.log(`   語言: ${acceptLanguage.substring(0, 20)}... | 來源: ${referer.substring(0, 30)}...`);
@@ -562,8 +566,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     const streamData = response.data.data;
                     
                     if (streamData.durl && streamData.durl.length > 0) {
-                        // FLV 格式 - 智能選擇主節點
-                        const selectedMainNode = await getBestAvailableNode(bvid);
+                        // FLV 格式 - 根據參數選擇節點
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.durl) {
                             const originalUrl = item.url;
@@ -605,8 +609,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     }
                     
                     if (streamData.dash && streamData.dash.video) {
-                        // DASH 格式 - 智能選擇主節點
-                        const selectedMainNode = await getBestAvailableNode(bvid);
+                        // DASH 格式 - 根據參數選擇節點
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.dash.video) {
                             const originalUrl = item.baseUrl;
@@ -648,8 +652,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                     }
                     
                     if (streamData.dash && streamData.dash.audio) {
-                        // DASH 音頻 - 智能選擇主節點
-                        const selectedMainNode = await getBestAvailableNode(bvid);
+                        // DASH 音頻 - 根據參數選擇節點
+                        const selectedMainNode = useMirror ? 'upos-sz-mirror08c.bilivideo.com' : await getBestAvailableNode(bvid);
                         
                         for (const item of streamData.dash.audio) {
                             const originalUrl = item.baseUrl;

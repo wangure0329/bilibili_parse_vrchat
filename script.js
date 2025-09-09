@@ -193,6 +193,22 @@ class BilibiliParser {
             });
         });
 
+        // Mirror 解析按鈕點擊事件
+        const mirrorParseBtn = document.getElementById('mirrorParseBtn');
+        if (mirrorParseBtn) {
+            mirrorParseBtn.addEventListener('click', () => this.handleMirrorParse());
+        }
+
+        // Mirror 輸入框回車事件
+        const mirrorUrlInput = document.getElementById('mirrorUrlInput');
+        if (mirrorUrlInput) {
+            mirrorUrlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.handleMirrorParse();
+                }
+            });
+        }
+
         // 複製全部按鈕
         const copyAllBtn = document.getElementById('copyAllBtn');
         if (copyAllBtn) {
@@ -242,6 +258,34 @@ class BilibiliParser {
         }
     }
 
+    async handleMirrorParse() {
+        const mirrorUrlInput = document.getElementById('mirrorUrlInput');
+        const url = mirrorUrlInput.value.trim();
+
+        if (!url) {
+            this.showToast('請輸入 Bilibili 連結', 'error');
+            return;
+        }
+
+        if (!this.isValidBilibiliUrl(url)) {
+            this.showToast(translations[currentLang]['invalidUrl'], 'error');
+            return;
+        }
+
+        this.showLoading(true);
+        
+        try {
+            const results = await this.parseUrlWithMirror(url);
+            this.displayResults(results);
+            this.showToast('Mirror 節點解析成功', 'success');
+        } catch (error) {
+            console.error('Mirror 解析錯誤:', error);
+            this.showToast('Mirror 節點解析失敗', 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
     isValidBilibiliUrl(url) {
         const patterns = [
             /https?:\/\/(www\.)?bilibili\.com\/video\/BV[a-zA-Z0-9]+/,
@@ -260,6 +304,18 @@ class BilibiliParser {
         const bvid = this.extractBvid(url);
         if (bvid) {
             results.push(...await this.parseVideo(bvid, url));
+        }
+
+        return results;
+    }
+
+    async parseUrlWithMirror(url) {
+        const results = [];
+        
+        // 影片解析 - 使用 Mirror 節點
+        const bvid = this.extractBvid(url);
+        if (bvid) {
+            results.push(...await this.parseVideoWithMirror(bvid, url));
         }
 
         return results;
@@ -690,6 +746,78 @@ window.addEventListener('unhandledrejection', (e) => {
         window.bilibiliParser.showToast('網路請求失敗', 'error');
     }
 });
+
+// 添加 parseVideoWithMirror 方法到 BilibiliParser 類
+BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl) {
+    const results = [];
+    
+    try {
+        console.log('開始使用 Mirror 節點解析影片:', bvid);
+        
+        // 影片資訊
+        results.push({
+            title: '影片資訊 (Mirror 節點)',
+            url: originalUrl,
+            type: 'info',
+            description: `BV${bvid} - 使用 upos-sz-mirror08c.bilivideo.com 節點解析`
+        });
+
+        // 通過我們的伺服器 API 獲取影片資訊（使用 Mirror 節點）
+        try {
+            const response = await fetch(`${window.location.origin}/api/parse/video/${bvid}?mirror=true`);
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                // 顯示解析結果
+                data.data.forEach(item => {
+                    results.push({
+                        title: item.title + ' (Mirror)',
+                        url: item.url,
+                        type: item.type || 'stream',
+                        description: item.description || 'Mirror 節點解析結果'
+                    });
+                });
+            } else {
+                // 如果伺服器解析失敗，提供基本連結
+                results.push({
+                    title: 'Mirror 節點解析失敗',
+                    url: originalUrl,
+                    type: 'info',
+                    description: '請檢查伺服器狀態或稍後再試'
+                });
+            }
+        } catch (error) {
+            console.error('調用 Mirror 節點 API 失敗:', error);
+            // 降級方案：提供基本連結
+            results.push({
+                title: 'Mirror API 調用失敗',
+                url: originalUrl,
+                type: 'info',
+                description: '無法連接到伺服器，請檢查網路連接'
+            });
+        }
+
+        // 原始連結
+        results.push({
+            title: '原始連結',
+            url: originalUrl,
+            type: 'original',
+            description: 'Bilibili 原始影片連結'
+        });
+
+    } catch (error) {
+        console.error('Mirror 節點影片解析錯誤:', error);
+        // 降級方案：提供基本連結
+        results.push({
+            title: '原始連結',
+            url: originalUrl,
+            type: 'original',
+            description: 'Bilibili 原始影片連結'
+        });
+    }
+
+    return results;
+};
 
 // 導出給全局使用
 window.BilibiliParser = BilibiliParser;

@@ -52,6 +52,19 @@
                         <span data-zh="解析" data-ja="解析">解析</span>
                     </button>
                 </div>
+                
+                <!-- Mirror 節點專用欄位 -->
+                <div class="mirror-section">
+                    <div class="mirror-input-group">
+                        <input type="text" id="mirrorUrlInput" placeholder="請輸入要在中文咖啡廳撥放的BILIBILI連結" class="mirror-url-input" data-zh-placeholder="請輸入要在中文咖啡廳撥放的BILIBILI連結" data-ja-placeholder="中国語カフェで再生するBILIBILIリンクを入力してください">
+                        <button id="mirrorParseBtn" class="mirror-parse-btn">
+                            <i class="fas fa-server"></i>
+                            <span data-zh="解析" data-ja="解析">解析</span>
+                        </button>
+                    </div>
+                    <p class="mirror-note" data-zh="專門使用中文咖啡廳進行解析，可能有機率失效" data-ja="中国語カフェ専用で解析し、失敗する可能性があります">專門使用中文咖啡廳進行解析，可能有機率失效</p>
+                </div>
+                
                 <div class="example-links">
                     <p data-zh="範例連結：" data-ja="例のリンク：">範例連結：</p>
                     <div class="example-buttons">
@@ -70,6 +83,25 @@
                 </div>
                 <div class="result-content" id="resultContent">
                     <!-- 解析結果將在這裡顯示 -->
+                </div>
+            </div>
+
+            <!-- 使用說明 -->
+            <div class="usage-section">
+                <h2 data-zh="使用說明" data-ja="使用方法">使用說明</h2>
+                <div class="usage-notes">
+                    <div class="usage-note">
+                        <i class="fas fa-link"></i>
+                        <p data-zh="讓解析更方便：將 https://vrcbilibili.糕.tw/?url= 放在連結前面即可馬上解析" data-ja="解析をより簡単に：https://vrcbilibili.糕.tw/?url= をリンクの前に付けるだけで即座に解析">讓解析更方便：將 https://vrcbilibili.糕.tw/?url= 放在連結前面即可馬上解析</p>
+                    </div>
+                    <div class="usage-note">
+                        <i class="fas fa-users"></i>
+                        <p data-zh="目前只支援私人房間還有作者的公開房" data-ja="現在はプライベートルームと作者の公開ルームのみサポート">目前只支援私人房間還有作者的公開房</p>
+                    </div>
+                    <div class="usage-note">
+                        <i class="fas fa-envelope"></i>
+                        <p data-zh="公開房作者需要使用請連絡我的email新增白名單" data-ja="公開ルーム作者は使用するために私のメールに連絡してホワイトリストに追加してください">公開房作者需要使用請連絡我的email新增白名單</p>
+                    </div>
                 </div>
             </div>
 
