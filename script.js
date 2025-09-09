@@ -759,7 +759,7 @@ BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl
             title: '影片資訊 (Mirror 節點)',
             url: originalUrl,
             type: 'info',
-            description: `BV${bvid} - 使用 upos-sz-mirror08c.bilivideo.com 節點解析`
+            description: `BV${bvid} - 使用 upos-sz-mirrorcos.bilivideo.com 節點解析`
         });
 
         // 通過我們的伺服器 API 獲取影片資訊（使用 Mirror 節點）
@@ -768,15 +768,15 @@ BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl
             const data = await response.json();
             
             if (data.success && data.data) {
-                // 顯示解析結果
-                data.data.forEach(item => {
-                    results.push({
-                        title: item.title + ' (Mirror)',
-                        url: item.url,
-                        type: item.type || 'stream',
-                        description: item.description || 'Mirror 節點解析結果'
+                    // 顯示解析結果
+                    data.data.forEach(item => {
+                        results.push({
+                            title: item.title + ' (Mirror)',
+                            url: item.url,
+                            type: item.type || 'stream',
+                            description: item.description || 'Mirror 節點解析結果'
+                        });
                     });
-                });
             } else {
                 // 如果伺服器解析失敗，提供基本連結
                 results.push({
