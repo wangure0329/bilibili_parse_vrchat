@@ -297,7 +297,8 @@ class BilibiliParser {
             /https?:\/\/(www\.)?bilibili\.com\/video\/BV[a-zA-Z0-9]+/,
             /https?:\/\/live\.bilibili\.com\/\d+/,
             /https?:\/\/(www\.)?bilibili\.com\/bangumi\/play\/[a-zA-Z0-9]+/,
-            /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/
+            /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/,
+            /https?:\/\/b23\.tv\/[a-zA-Z0-9]+/  // 支持 b23.tv 短連結
         ];
         
         return patterns.some(pattern => pattern.test(processedUrl));

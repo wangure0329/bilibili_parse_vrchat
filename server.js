@@ -95,6 +95,46 @@ function getCounters() {
     };
 }
 
+// 解析 b23.tv 短連結，獲取完整的 Bilibili URL
+async function resolveB23ShortLink(shortUrl) {
+    try {
+        // 確保 URL 包含協議
+        let url = shortUrl;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
+        }
+        
+        // 發送 GET 請求跟隨重定向，但限制響應體大小
+        const response = await axios.get(url, {
+            maxRedirects: 5,
+            validateStatus: (status) => status < 400,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Referer': 'https://www.bilibili.com/'
+            },
+            // 限制響應體大小，避免下載完整頁面
+            maxContentLength: 1024 * 1024, // 1MB
+            timeout: 5000 // 5秒超時
+        });
+        
+        // 從響應的 request 中獲取最終 URL
+        // axios 會自動跟隨重定向，最終 URL 在 response.request.res.responseUrl
+        const finalUrl = response.request?.res?.responseUrl || 
+                        response.request?.res?.response?.headers?.location ||
+                        response.config?.url ||
+                        url;
+        
+        return finalUrl;
+    } catch (error) {
+        // 如果請求失敗，嘗試從錯誤響應中獲取重定向 URL
+        if (error.response && error.response.headers && error.response.headers.location) {
+            return error.response.headers.location;
+        }
+        console.error(`❌ 解析 b23.tv 短連結失敗: ${shortUrl}`, error.message);
+        return null;
+    }
+}
+
 // 節點狀態管理 - 三個主要節點 + Mirror 節點
 const nodeStatus = {
     // 深圳節點 (華南)
@@ -536,7 +576,7 @@ async function parseAndRedirectTo1440P(req, res, bvid) {
 }
 
 // Niche 專用路由 - 只使用 upos-sz-mirrorcos.bilivideo.com 節點
-app.get('/niche/', (req, res) => {
+app.get('/niche/', async (req, res) => {
     const { url } = req.query;
     if (url) {
         // 嘗試多種方式獲取真實 IP
@@ -578,6 +618,18 @@ app.get('/niche/', (req, res) => {
                 processedUrl = 'https://www.bilibili.com/video/' + url;
             } else {
                 processedUrl = 'https://' + url;
+            }
+        }
+        
+        // 檢查是否是 b23.tv 短連結
+        if (processedUrl.includes('b23.tv/')) {
+            console.log(`🔗 檢測到 b23.tv 短連結，正在解析...`);
+            const resolvedUrl = await resolveB23ShortLink(processedUrl);
+            if (resolvedUrl) {
+                processedUrl = resolvedUrl;
+                console.log(`✅ 短連結解析成功: ${resolvedUrl}`);
+            } else {
+                console.log(`❌ 短連結解析失敗，使用原始 URL`);
             }
         }
         
@@ -669,7 +721,7 @@ app.get('/niche/', (req, res) => {
 });
 
 // 主頁面路由 - 處理 URL 參數重定向
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const { url } = req.query;
     if (url) {
         // 如果有 URL 參數，重定向到解析結果頁面
@@ -712,6 +764,18 @@ app.get('/', (req, res) => {
                 processedUrl = 'https://www.bilibili.com/video/' + url;
             } else {
                 processedUrl = 'https://' + url;
+            }
+        }
+        
+        // 檢查是否是 b23.tv 短連結
+        if (processedUrl.includes('b23.tv/')) {
+            console.log(`🔗 檢測到 b23.tv 短連結，正在解析...`);
+            const resolvedUrl = await resolveB23ShortLink(processedUrl);
+            if (resolvedUrl) {
+                processedUrl = resolvedUrl;
+                console.log(`✅ 短連結解析成功: ${resolvedUrl}`);
+            } else {
+                console.log(`❌ 短連結解析失敗，使用原始 URL`);
             }
         }
         
