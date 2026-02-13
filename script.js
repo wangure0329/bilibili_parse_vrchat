@@ -234,15 +234,25 @@ class BilibiliParser {
         const urlInput = document.getElementById('urlInput');
         const url = urlInput.value.trim();
 
+        console.log('🔍 handleParse 被調用，URL:', url);
+
         if (!url) {
             this.showToast('請輸入 Bilibili 連結', 'error');
             return;
         }
 
-        if (!this.isValidBilibiliUrl(url)) {
+        // 詳細驗證日誌
+        console.log('🔍 開始驗證 URL:', url);
+        const isValid = this.isValidBilibiliUrl(url);
+        console.log('🔍 驗證結果:', isValid);
+
+        if (!isValid) {
+            console.error('❌ URL 驗證失敗，顯示錯誤消息');
             this.showToast(translations[currentLang]['invalidUrl'], 'error');
             return;
         }
+
+        console.log('✅ URL 驗證通過，繼續解析');
 
         this.showLoading(true);
         
