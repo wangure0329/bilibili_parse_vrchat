@@ -287,6 +287,16 @@ class BilibiliParser {
     }
 
     isValidBilibiliUrl(url) {
+        if (!url || typeof url !== 'string') {
+            return false;
+        }
+        
+        // 去除首尾空白
+        url = url.trim();
+        if (!url) {
+            return false;
+        }
+        
         // 如果沒有協議，自動添加 https://
         let processedUrl = url;
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -298,14 +308,31 @@ class BilibiliParser {
             /https?:\/\/live\.bilibili\.com\/\d+/,
             /https?:\/\/(www\.)?bilibili\.com\/bangumi\/play\/[a-zA-Z0-9]+/,
             /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/,
-            /https?:\/\/b23\.tv\/[^\s]+/i  // 支持 b23.tv 短連結（匹配任何非空白字符）
+            /https?:\/\/b23\.tv\/[^\s?#]+/i  // 支持 b23.tv 短連結（匹配路徑部分，排除查詢參數和錨點）
         ];
         
-        return patterns.some(pattern => pattern.test(processedUrl));
+        const isValid = patterns.some(pattern => pattern.test(processedUrl));
+        
+        // 調試信息（開發時使用）
+        if (!isValid) {
+            console.log('URL 驗證失敗:', { original: url, processed: processedUrl });
+        }
+        
+        return isValid;
     }
 
     async parseUrl(url) {
         const results = [];
+        
+        // 檢查是否是 b23.tv 短連結
+        const isB23ShortLink = /b23\.tv\/[^\s?#]+/i.test(url);
+        
+        if (isB23ShortLink) {
+            // 對於 b23.tv 短連結，直接使用 URL 參數方式解析（後端會處理短連結）
+            // 重定向到後端解析
+            window.location.href = `${window.location.origin}/?url=${encodeURIComponent(url)}`;
+            return results;
+        }
         
         // 影片解析
         const bvid = this.extractBvid(url);
@@ -318,6 +345,15 @@ class BilibiliParser {
 
     async parseUrlWithMirror(url) {
         const results = [];
+        
+        // 檢查是否是 b23.tv 短連結
+        const isB23ShortLink = /b23\.tv\/[^\s?#]+/i.test(url);
+        
+        if (isB23ShortLink) {
+            // 對於 b23.tv 短連結，使用 niche 路由解析（後端會處理短連結）
+            window.location.href = `${window.location.origin}/niche/?url=${encodeURIComponent(url)}`;
+            return results;
+        }
         
         // 影片解析 - 使用 Mirror 節點
         const bvid = this.extractBvid(url);
