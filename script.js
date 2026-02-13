@@ -288,12 +288,14 @@ class BilibiliParser {
 
     isValidBilibiliUrl(url) {
         if (!url || typeof url !== 'string') {
+            console.log('驗證失敗: URL 為空或不是字符串', url);
             return false;
         }
         
         // 去除首尾空白
         url = url.trim();
         if (!url) {
+            console.log('驗證失敗: URL 為空（去除空白後）');
             return false;
         }
         
@@ -311,11 +313,21 @@ class BilibiliParser {
             /https?:\/\/b23\.tv\/[^\s]*/i  // 支持 b23.tv 短連結（允許斜線後有或沒有字符）
         ];
         
-        const isValid = patterns.some(pattern => pattern.test(processedUrl));
+        // 逐個測試模式，方便調試
+        let matchedPattern = null;
+        const isValid = patterns.some((pattern, index) => {
+            const result = pattern.test(processedUrl);
+            if (result) {
+                matchedPattern = index;
+            }
+            return result;
+        });
         
-        // 調試信息（開發時使用）
-        if (!isValid) {
-            console.log('URL 驗證失敗:', { original: url, processed: processedUrl });
+        // 調試信息
+        if (isValid) {
+            console.log('✅ URL 驗證通過:', { original: url, processed: processedUrl, matchedPattern });
+        } else {
+            console.log('❌ URL 驗證失敗:', { original: url, processed: processedUrl, patterns: patterns.map((p, i) => ({ index: i, pattern: p.toString(), test: p.test(processedUrl) })) });
         }
         
         return isValid;
