@@ -297,22 +297,29 @@ class BilibiliParser {
     }
 
     isValidBilibiliUrl(url) {
-        if (!url || typeof url !== 'string') {
-            console.log('驗證失敗: URL 為空或不是字符串', url);
+        // 詳細的輸入檢查
+        if (!url) {
+            console.log('❌ 驗證失敗: URL 為空', typeof url);
+            return false;
+        }
+        
+        if (typeof url !== 'string') {
+            console.log('❌ 驗證失敗: URL 不是字符串', typeof url, url);
             return false;
         }
         
         // 去除首尾空白
-        url = url.trim();
-        if (!url) {
-            console.log('驗證失敗: URL 為空（去除空白後）');
+        const trimmedUrl = url.trim();
+        if (!trimmedUrl) {
+            console.log('❌ 驗證失敗: URL 為空（去除空白後）');
             return false;
         }
         
         // 如果沒有協議，自動添加 https://
-        let processedUrl = url;
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            processedUrl = 'https://' + url;
+        let processedUrl = trimmedUrl;
+        if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+            processedUrl = 'https://' + trimmedUrl;
+            console.log('🔧 自動添加協議:', processedUrl);
         }
         
         const patterns = [
@@ -329,15 +336,32 @@ class BilibiliParser {
             const result = pattern.test(processedUrl);
             if (result) {
                 matchedPattern = index;
+                console.log(`✅ 模式 ${index} 匹配成功:`, pattern.toString());
             }
             return result;
         });
         
         // 調試信息
         if (isValid) {
-            console.log('✅ URL 驗證通過:', { original: url, processed: processedUrl, matchedPattern });
+            console.log('✅ URL 驗證通過:', { 
+                original: url, 
+                trimmed: trimmedUrl,
+                processed: processedUrl, 
+                matchedPattern,
+                matchedPatternRegex: patterns[matchedPattern]?.toString()
+            });
         } else {
-            console.log('❌ URL 驗證失敗:', { original: url, processed: processedUrl, patterns: patterns.map((p, i) => ({ index: i, pattern: p.toString(), test: p.test(processedUrl) })) });
+            console.error('❌ URL 驗證失敗:', { 
+                original: url, 
+                trimmed: trimmedUrl,
+                processed: processedUrl,
+                patterns: patterns.map((p, i) => ({ 
+                    index: i, 
+                    pattern: p.toString(), 
+                    test: p.test(processedUrl),
+                    match: processedUrl.match(p)
+                }))
+            });
         }
         
         return isValid;
@@ -808,9 +832,26 @@ function addUrlValidation() {
     if (!urlInput) return;
 
     const debouncedValidation = debounce((url) => {
-        if (url && !window.bilibiliParser.isValidBilibiliUrl(url)) {
-            urlInput.style.borderColor = 'var(--error-color)';
+        if (!url || !url.trim()) {
+            // 空輸入時恢復默認邊框
+            urlInput.style.borderColor = 'var(--border-color)';
+            return;
+        }
+        
+        const trimmedUrl = url.trim();
+        console.log('🔍 實時驗證 URL:', trimmedUrl);
+        
+        if (window.bilibiliParser && window.bilibiliParser.isValidBilibiliUrl) {
+            const isValid = window.bilibiliParser.isValidBilibiliUrl(trimmedUrl);
+            console.log('🔍 實時驗證結果:', isValid);
+            
+            if (isValid) {
+                urlInput.style.borderColor = 'var(--border-color)';
+            } else {
+                urlInput.style.borderColor = 'var(--error-color)';
+            }
         } else {
+            console.warn('⚠️ bilibiliParser 或 isValidBilibiliUrl 未初始化');
             urlInput.style.borderColor = 'var(--border-color)';
         }
     }, 300);
