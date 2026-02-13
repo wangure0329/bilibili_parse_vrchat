@@ -308,7 +308,7 @@ class BilibiliParser {
             /https?:\/\/live\.bilibili\.com\/\d+/,
             /https?:\/\/(www\.)?bilibili\.com\/bangumi\/play\/[a-zA-Z0-9]+/,
             /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/,
-            /https?:\/\/b23\.tv\/[^\s?#]+/i  // 支持 b23.tv 短連結（匹配路徑部分，排除查詢參數和錨點）
+            /https?:\/\/b23\.tv\/[^\s]*/i  // 支持 b23.tv 短連結（允許斜線後有或沒有字符）
         ];
         
         const isValid = patterns.some(pattern => pattern.test(processedUrl));
@@ -324,8 +324,8 @@ class BilibiliParser {
     async parseUrl(url) {
         const results = [];
         
-        // 檢查是否是 b23.tv 短連結
-        const isB23ShortLink = /b23\.tv\/[^\s?#]+/i.test(url);
+        // 檢查是否是 b23.tv 短連結（允許斜線後有或沒有字符）
+        const isB23ShortLink = /b23\.tv\/[^\s]*/i.test(url);
         
         if (isB23ShortLink) {
             // 對於 b23.tv 短連結，直接使用 URL 參數方式解析（後端會處理短連結）
@@ -347,7 +347,7 @@ class BilibiliParser {
         const results = [];
         
         // 檢查是否是 b23.tv 短連結
-        const isB23ShortLink = /b23\.tv\/[^\s?#]+/i.test(url);
+        const isB23ShortLink = /b23\.tv\/[^\s]*/i.test(url);
         
         if (isB23ShortLink) {
             // 對於 b23.tv 短連結，使用 niche 路由解析（後端會處理短連結）
