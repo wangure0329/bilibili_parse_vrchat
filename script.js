@@ -327,7 +327,7 @@ class BilibiliParser {
             /https?:\/\/live\.bilibili\.com\/\d+/,
             /https?:\/\/(www\.)?bilibili\.com\/bangumi\/play\/[a-zA-Z0-9]+/,
             /https?:\/\/(www\.)?bilibili\.com\/.*bvid=BV[a-zA-Z0-9]+/,
-            /https?:\/\/b23\.tv\/[^\s]*/i  // 支持 b23.tv 短連結（允許斜線後有或沒有字符）
+            /https?:\/\/b23\.tv\/.*/i  // 支持 b23.tv 短連結（匹配任何字符，包括空）
         ];
         
         // 逐個測試模式，方便調試
@@ -371,7 +371,7 @@ class BilibiliParser {
         const results = [];
         
         // 檢查是否是 b23.tv 短連結（允許斜線後有或沒有字符）
-        const isB23ShortLink = /b23\.tv\/[^\s]*/i.test(url);
+        const isB23ShortLink = /b23\.tv\/.*/i.test(url);
         
         if (isB23ShortLink) {
             // 對於 b23.tv 短連結，直接使用 URL 參數方式解析（後端會處理短連結）
