@@ -393,7 +393,7 @@ class BilibiliParser {
         const results = [];
         
         // 檢查是否是 b23.tv 短連結
-        const isB23ShortLink = /b23\.tv\/[^\s]*/i.test(url);
+        const isB23ShortLink = /b23\.tv\/.*/i.test(url);
         
         if (isB23ShortLink) {
             // 對於 b23.tv 短連結，使用 niche 路由解析（後端會處理短連結）
