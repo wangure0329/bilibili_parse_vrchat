@@ -869,6 +869,9 @@ function debounce(func, delay) {
 
 // 頁面載入完成後初始化
 document.addEventListener('DOMContentLoaded', () => {
+    // 更新版權年份
+    updateCopyrightYear();
+    
     // 創建全局實例
     window.bilibiliParser = new BilibiliParser();
     
@@ -879,6 +882,21 @@ document.addEventListener('DOMContentLoaded', () => {
     addKeyboardShortcuts();
     addUrlValidation();
 });
+
+// 更新版權年份
+function updateCopyrightYear() {
+    const yearElement = document.getElementById('copyrightYear');
+    if (yearElement) {
+        const currentYear = new Date().getFullYear();
+        const startYear = 2025;
+        // 如果當前年份大於 2025，顯示範圍，否則只顯示當前年份
+        if (currentYear > startYear) {
+            yearElement.textContent = `${startYear}-${currentYear}`;
+        } else {
+            yearElement.textContent = currentYear.toString();
+        }
+    }
+}
 
 // 鍵盤快捷鍵
 function addKeyboardShortcuts() {
