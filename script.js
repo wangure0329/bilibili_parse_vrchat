@@ -374,9 +374,46 @@ class BilibiliParser {
         const isB23ShortLink = /b23\.tv\/.*/i.test(url);
         
         if (isB23ShortLink) {
-            // 對於 b23.tv 短連結，直接使用 URL 參數方式解析（後端會處理短連結）
-            // 重定向到後端解析
-            window.location.href = `${window.location.origin}/?url=${encodeURIComponent(url)}`;
+            // 對於 b23.tv 短連結，先通過後端解析短連結獲取完整 URL
+            try {
+                console.log('🔗 檢測到 b23.tv 短連結，正在解析...');
+                // 使用後端 API 解析短連結（通過 ?url= 參數，後端會處理短連結解析）
+                const response = await fetch(`${window.location.origin}/api/parse/shortlink?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                
+                if (data.success && data.fullUrl) {
+                    console.log('✅ 短連結解析成功:', data.fullUrl);
+                    // 從完整 URL 中提取 BV 號
+                    const bvid = this.extractBvid(data.fullUrl);
+                    if (bvid) {
+                        // 使用完整 URL 解析影片
+                        results.push(...await this.parseVideo(bvid, data.fullUrl));
+                    } else {
+                        results.push({
+                            title: '解析失敗',
+                            url: url,
+                            type: 'error',
+                            description: '無法從解析後的 URL 中提取 BV 號'
+                        });
+                    }
+                } else {
+                    results.push({
+                        title: '短連結解析失敗',
+                        url: url,
+                        type: 'error',
+                        description: data.message || '無法解析 b23.tv 短連結'
+                    });
+                }
+            } catch (error) {
+                console.error('解析短連結失敗:', error);
+                results.push({
+                    title: '短連結解析錯誤',
+                    url: url,
+                    type: 'error',
+                    description: '無法連接到伺服器解析短連結'
+                });
+            }
+            
             return results;
         }
         
@@ -396,8 +433,46 @@ class BilibiliParser {
         const isB23ShortLink = /b23\.tv\/.*/i.test(url);
         
         if (isB23ShortLink) {
-            // 對於 b23.tv 短連結，使用 niche 路由解析（後端會處理短連結）
-            window.location.href = `${window.location.origin}/niche/?url=${encodeURIComponent(url)}`;
+            // 對於 b23.tv 短連結，先通過後端解析短連結獲取完整 URL
+            try {
+                console.log('🔗 檢測到 b23.tv 短連結（Mirror），正在解析...');
+                // 使用後端 API 解析短連結
+                const response = await fetch(`${window.location.origin}/api/parse/shortlink?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                
+                if (data.success && data.fullUrl) {
+                    console.log('✅ 短連結解析成功:', data.fullUrl);
+                    // 從完整 URL 中提取 BV 號
+                    const bvid = this.extractBvid(data.fullUrl);
+                    if (bvid) {
+                        // 使用 Mirror 節點解析影片
+                        results.push(...await this.parseVideoWithMirror(bvid, data.fullUrl));
+                    } else {
+                        results.push({
+                            title: '解析失敗',
+                            url: url,
+                            type: 'error',
+                            description: '無法從解析後的 URL 中提取 BV 號'
+                        });
+                    }
+                } else {
+                    results.push({
+                        title: '短連結解析失敗',
+                        url: url,
+                        type: 'error',
+                        description: data.message || '無法解析 b23.tv 短連結'
+                    });
+                }
+            } catch (error) {
+                console.error('解析短連結失敗:', error);
+                results.push({
+                    title: '短連結解析錯誤',
+                    url: url,
+                    type: 'error',
+                    description: '無法連接到伺服器解析短連結'
+                });
+            }
+            
             return results;
         }
         

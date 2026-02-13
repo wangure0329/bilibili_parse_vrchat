@@ -629,10 +629,34 @@ app.get('/niche/', async (req, res) => {
                 processedUrl = resolvedUrl;
                 console.log(`✅ 短連結解析成功: ${resolvedUrl}`);
             } else {
-                console.log(`❌ 短連結解析失敗，使用原始 URL`);
+                console.log(`❌ 短連結解析失敗`);
+                // 短連結解析失敗，顯示錯誤頁面
+                return res.send(`
+                    <!DOCTYPE html>
+                    <html lang="zh-TW">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>解析失敗</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; text-align: center; padding: 50px; }
+                            .error { background: #333; padding: 20px; border-radius: 8px; border: 2px solid #ff4444; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error">
+                            <h2>❌ 短連結解析失敗</h2>
+                            <p>無法解析 b23.tv 短連結，請使用完整的 Bilibili 影片連結</p>
+                            <p>例如：https://www.bilibili.com/video/BV1xx411c7mu</p>
+                            <p><a href="/" style="color: #4CAF50;">返回首頁</a></p>
+                        </div>
+                    </body>
+                    </html>
+                `);
             }
         }
         
+        // 檢查是否是有效的 Bilibili 連結（包括解析後的短連結）
         if (processedUrl.includes('bilibili.com') || processedUrl.includes('bvid=') || processedUrl.includes('BV')) {
             // 提取 BV 號和分P
             let bvid = null;
@@ -775,10 +799,34 @@ app.get('/', async (req, res) => {
                 processedUrl = resolvedUrl;
                 console.log(`✅ 短連結解析成功: ${resolvedUrl}`);
             } else {
-                console.log(`❌ 短連結解析失敗，使用原始 URL`);
+                console.log(`❌ 短連結解析失敗`);
+                // 短連結解析失敗，顯示錯誤頁面
+                return res.send(`
+                    <!DOCTYPE html>
+                    <html lang="zh-TW">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>解析失敗</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; text-align: center; padding: 50px; }
+                            .error { background: #333; padding: 20px; border-radius: 8px; border: 2px solid #ff4444; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error">
+                            <h2>❌ 短連結解析失敗</h2>
+                            <p>無法解析 b23.tv 短連結，請使用完整的 Bilibili 影片連結</p>
+                            <p>例如：https://www.bilibili.com/video/BV1xx411c7mu</p>
+                            <p><a href="/" style="color: #4CAF50;">返回首頁</a></p>
+                        </div>
+                    </body>
+                    </html>
+                `);
             }
         }
         
+        // 檢查是否是有效的 Bilibili 連結（包括解析後的短連結）
         if (processedUrl.includes('bilibili.com') || processedUrl.includes('bvid=') || processedUrl.includes('BV')) {
             // 提取 BV 號和分P
             let bvid = null;
@@ -860,6 +908,54 @@ app.get('/', async (req, res) => {
     
     // 如果沒有 URL 參數，正常顯示主頁面
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// API 端點 - 解析 b23.tv 短連結
+app.get('/api/parse/shortlink', async (req, res) => {
+    const { url } = req.query;
+    
+    if (!url) {
+        return res.json({
+            success: false,
+            message: '請提供 URL 參數'
+        });
+    }
+    
+    try {
+        console.log(`🔗 解析短連結請求: ${url}`);
+        
+        // 檢查是否是 b23.tv 短連結
+        if (!url.includes('b23.tv/')) {
+            return res.json({
+                success: false,
+                message: '不是有效的 b23.tv 短連結'
+            });
+        }
+        
+        // 解析短連結
+        const fullUrl = await resolveB23ShortLink(url);
+        
+        if (fullUrl) {
+            console.log(`✅ 短連結解析成功: ${fullUrl}`);
+            return res.json({
+                success: true,
+                fullUrl: fullUrl,
+                originalUrl: url
+            });
+        } else {
+            console.log(`❌ 短連結解析失敗: ${url}`);
+            return res.json({
+                success: false,
+                message: '無法解析短連結，請檢查 URL 是否正確'
+            });
+        }
+    } catch (error) {
+        console.error('❌ 解析短連結錯誤:', error);
+        return res.json({
+            success: false,
+            message: '解析短連結時發生錯誤: ' + error.message
+        });
+    }
 });
 
 // API 端點 - 影片解析
