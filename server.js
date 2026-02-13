@@ -1102,8 +1102,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                             const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
-                                ? `中文咖啡廳適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
-                                : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈)`;
+                                ? `栖隙居所適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
+                                : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈) 請複製我!`;
                             
                             results.push({
                                 title: `${quality.name} FLV 流地址 (主節點)`,
@@ -1141,8 +1141,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                             const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
-                                ? `中文咖啡廳適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
-                                : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈)`;
+                                ? `栖隙居所適配 - ${quality.name} ${quality.desc} (已繞過防盜鏈)`
+                                : `主CDN節點: ${selectedMainNode} - ${quality.name} ${quality.desc} (已繞過防盜鏈) 請複製我!`;
                             
                             results.push({
                                 title: `${quality.name} DASH 視頻流 (主節點)`,
@@ -1180,8 +1180,8 @@ app.get('/api/parse/video/:bvid', async (req, res) => {
                             
                             // 總是添加主節點地址，並根據節點類型顯示不同描述
                                 const nodeDescription = selectedMainNode === 'upos-sz-mirror08c.bilivideo.com' 
-                                    ? `中文咖啡廳適配 - 高品質音頻 (已繞過防盜鏈)`
-                                    : `主CDN節點: ${selectedMainNode} - 高品質音頻 (已繞過防盜鏈)`;
+                                    ? `栖隙居所適配 - 高品質音頻 (已繞過防盜鏈)`
+                                    : `主CDN節點: ${selectedMainNode} - 高品質音頻 (已繞過防盜鏈) 請複製我!`;
                             
                             results.push({
                                 title: `${quality.name} DASH 音頻流 (主節點)`,

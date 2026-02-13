@@ -287,10 +287,10 @@ class BilibiliParser {
         try {
             const results = await this.parseUrlWithMirror(url);
             this.displayResults(results);
-            this.showToast('Mirror 節點解析成功', 'success');
+            this.showToast('栖隙居所節點解析成功', 'success');
         } catch (error) {
             console.error('Mirror 解析錯誤:', error);
-            this.showToast('Mirror 節點解析失敗', 'error');
+            this.showToast('栖隙居所節點解析失敗', 'error');
         } finally {
             this.showLoading(false);
         }
@@ -957,14 +957,14 @@ BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl
     const results = [];
     
     try {
-        console.log('開始使用 Mirror 節點解析影片:', bvid);
+        console.log('開始使用栖隙居所節點解析影片:', bvid);
         
         // 影片資訊
         results.push({
-            title: '影片資訊 (Mirror 節點)',
+            title: '影片資訊 (栖隙居所節點)',
             url: originalUrl,
             type: 'info',
-            description: `BV${bvid} - 使用 upos-sz-mirrorcos.bilivideo.com 節點解析`
+            description: `BV${bvid} - 使用 upos-sz-mirror08c.bilivideo.com 節點解析 (栖隙居所)`
         });
 
         // 通過我們的伺服器 API 獲取影片資訊（使用 Mirror 節點）
@@ -976,26 +976,26 @@ BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl
                     // 顯示解析結果
                     data.data.forEach(item => {
                         results.push({
-                            title: item.title + ' (Mirror)',
+                            title: item.title + ' (栖隙居所)',
                             url: item.url,
                             type: item.type || 'stream',
-                            description: item.description || 'Mirror 節點解析結果'
+                            description: item.description || '栖隙居所節點解析結果'
                         });
                     });
             } else {
                 // 如果伺服器解析失敗，提供基本連結
                 results.push({
-                    title: 'Mirror 節點解析失敗',
+                    title: '栖隙居所節點解析失敗',
                     url: originalUrl,
                     type: 'info',
                     description: '請檢查伺服器狀態或稍後再試'
                 });
             }
         } catch (error) {
-            console.error('調用 Mirror 節點 API 失敗:', error);
+            console.error('調用栖隙居所節點 API 失敗:', error);
             // 降級方案：提供基本連結
             results.push({
-                title: 'Mirror API 調用失敗',
+                title: '栖隙居所 API 調用失敗',
                 url: originalUrl,
                 type: 'info',
                 description: '無法連接到伺服器，請檢查網路連接'
@@ -1011,7 +1011,7 @@ BilibiliParser.prototype.parseVideoWithMirror = async function(bvid, originalUrl
         });
 
     } catch (error) {
-        console.error('Mirror 節點影片解析錯誤:', error);
+        console.error('栖隙居所節點影片解析錯誤:', error);
         // 降級方案：提供基本連結
         results.push({
             title: '原始連結',
